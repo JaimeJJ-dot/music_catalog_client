@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Grid, Typography, Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { getArtists, deleteArtist } from '../services/artistService';
@@ -7,29 +7,61 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorState from '../components/common/ErrorState';
 import EmptyState from '../components/common/EmptyState';
 import './ArtistsPage.css';
+import CreateArtistModal from '../components/artists/CreateArtistModal';
 
 const ArtistsPage = () => {
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
-  const fetchArtists = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await getArtists();
-      setArtists(response.data);
-    } catch (err) {
-      console.error("Error al obtener artistas:", err);
-      setError("No pudimos cargar la lista de artistas. Verifica tu conexión o sesión de OAuth.");
-    } finally {
-      setLoading(false);
-    }
+  // Función para insertar el nuevo artista en el estado de React al guardarlo:
+  const handleArtistCreated = (newArtist) => {
+    setArtists([newArtist, ...artists]); // Lo ponemos de primero en la lista
   };
 
+  // Aislamos la consulta asíncrona dentro del efecto para cumplir las reglas estrictas de React Hooks
   useEffect(() => {
+    let isMounted = true; // Buena práctica para evitar actualizar estados si el usuario cambia de página rápido
+
+    const fetchArtists = async () => {
+      try {
+        const response = await getArtists();
+        if (isMounted) {
+          setArtists(response.data);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error al obtener artistas:", err);
+        if (isMounted) {
+          setError("No pudimos cargar la lista de artistas. Verifica tu conexión o sesión de OAuth.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
     fetchArtists();
+
+    return () => {
+      isMounted = false; // Cleanup de seguridad
+    };
   }, []);
+
+  // Función de reintento para pasársela al ErrorState si algo falla
+  const handleRetry = () => {
+    setLoading(true);
+    setError(null);
+    getArtists()
+      .then((res) => setArtists(res.data))
+      .catch((err) => {
+        console.error(err);
+        setError("Error de red persistente. Intenta más tarde.");
+      })
+      .finally(() => setLoading(false));
+  };
 
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar este artista?")) {
@@ -37,6 +69,7 @@ const ArtistsPage = () => {
         await deleteArtist(id);
         setArtists(artists.filter((a) => a.id !== id));
       } catch (err) {
+        console.error("Error eliminando registro:", err);
         alert("Ocurrió un error al intentar eliminar el registro.");
       }
     }
@@ -47,7 +80,7 @@ const ArtistsPage = () => {
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={fetchArtists} />;
+    return <ErrorState message={error} onRetry={handleRetry} />;
   }
 
   return (
@@ -56,7 +89,13 @@ const ArtistsPage = () => {
         <Typography variant="h4" component="h1" fontWeight="bold">
           Catálogo de Artistas
         </Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        {/* Agregamos el evento onClick para que el botón abra el Modal */}
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setOpenModal(true)}
+        >
           Nuevo Artista
         </Button>
       </Box>
@@ -72,6 +111,13 @@ const ArtistsPage = () => {
           ))}
         </Grid>
       )}
+
+      {/* Componente Modal de creación */}
+      <CreateArtistModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onSuccess={handleArtistCreated}
+      />
     </Container>
   );
 };
