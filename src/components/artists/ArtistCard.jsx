@@ -2,7 +2,7 @@ import { Card, CardContent, CardMedia, Typography, Box, Button } from '@mui/mate
 import { DeleteOutlined as DeleteOutlineIcon } from '@mui/icons-material';
 import './ArtistCard.css';
 
-const ArtistCard = ({ artist, onDelete }) => {
+const ArtistCard = ({ artist, onDelete, canEdit }) => {
   const imageSource = artist.photo || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop";
 
   return (
@@ -25,17 +25,19 @@ const ArtistCard = ({ artist, onDelete }) => {
           {artist.biography ? `${artist.biography.substring(0, 80)}...` : 'Sin biografía registrada.'}
         </Typography>
 
-        <Box className="artist-actions">
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            startIcon={<DeleteOutlineIcon />}
-            onClick={() => onDelete(artist.id)}
-          >
-            Eliminar
-          </Button>
-        </Box>
+        {canEdit && (
+          <Box className="artist-actions">
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              startIcon={<DeleteOutlineIcon />}
+              onClick={() => onDelete(artist.id)}
+            >
+              Eliminar
+            </Button>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

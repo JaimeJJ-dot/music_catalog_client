@@ -1,47 +1,20 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Login from './pages/Login';
+import Home from './pages/Home';
 import ArtistsPage from './pages/ArtistsPage';
 import AlbumsPage from './pages/AlbumsPage';
-
-// Componente Wrapper para blindar rutas privadas
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('access_token');
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-};
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
-        {/* Ruta pública */}
         <Route path="/login" element={<Login />} />
-
-        {/* Rutas Privadas protegidas por OAuth 2.0 */}
-        <Route
-          path="/artists"
-          element={
-            <ProtectedRoute>
-              <ArtistsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/albums"
-          element={
-            <ProtectedRoute>
-              <AlbumsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Redirección por defecto */}
-        <Route path="*" element={<Navigate to="/artists" replace />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/artists" element={<ArtistsPage />} />
+        <Route path="/albums" element={<AlbumsPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

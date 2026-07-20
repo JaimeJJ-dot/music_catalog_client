@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Grid, Typography, Box, Button } from '@mui/material';
 import { AddOutlined as AddOutlineIcon } from '@mui/icons-material';
 import { getAlbums, deleteAlbum } from '../services/albumService';
+import { isLoggedIn } from '../utils/auth';
 import AlbumCard from '../components/albums/AlbumCard';
 import CreateAlbumModal from '../components/albums/CreateAlbumModal';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -14,6 +15,7 @@ const AlbumsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const canEdit = isLoggedIn();
 
   const fetchAlbums = async () => {
     setLoading(true);
@@ -64,9 +66,11 @@ const AlbumsPage = () => {
         <Typography variant="h4" component="h1" fontWeight="bold">
           Discografía y Álbumes
         </Typography>
-        <Button variant="contained" color="primary" startIcon={<AddOutlineIcon />} onClick={() => setOpenModal(true)}>
-          Nuevo Álbum
-        </Button>
+        {canEdit && (
+          <Button variant="contained" color="primary" startIcon={<AddOutlineIcon />} onClick={() => setOpenModal(true)}>
+            Nuevo Álbum
+          </Button>
+        )}
       </Box>
 
       {albums.length === 0 ? (
@@ -75,17 +79,19 @@ const AlbumsPage = () => {
         <Grid container spacing={3}>
           {albums.map((album) => (
             <Grid item xs={12} sm={6} md={4} key={album.id}>
-              <AlbumCard album={album} onDelete={handleDelete} />
+              <AlbumCard album={album} onDelete={handleDelete} canEdit={canEdit} />
             </Grid>
           ))}
         </Grid>
       )}
 
-      <CreateAlbumModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        onSuccess={handleAlbumCreated}
-      />
+      {canEdit && (
+        <CreateAlbumModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          onSuccess={handleAlbumCreated}
+        />
+      )}
     </Container>
   );
 };
