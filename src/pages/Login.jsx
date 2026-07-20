@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -12,10 +12,9 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // NOTA: En un proyecto real de producción, estos valores vendrían de variables
-    // de entorno (.env). Para el desarrollo local, usamos las de tu app OAuth.
-    const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID || "TU_CLIENT_ID_AQUI";
-    const CLIENT_SECRET = import.meta.env.VITE_OAUTH_CLIENT_SECRET || "TU_CLIENT_SECRET_AQUI";
+    // NOTA: estos valores están definidos en variable de entorno (.env)
+    const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+    const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
 
     const handleLogin = async (e) => {
         e.preventDefault();

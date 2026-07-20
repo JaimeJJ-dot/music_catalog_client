@@ -1,6 +1,6 @@
-
+// src/components/common/ErrorState.jsx
 import { Box, Typography, Button } from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { ErrorOutlined as ErrorOutlineIcon } from '@mui/icons-material';
 
 const ErrorState = ({ message = 'Ocurrió un error al cargar los datos.', onRetry }) => {
   return (

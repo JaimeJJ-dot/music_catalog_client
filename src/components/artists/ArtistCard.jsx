@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Box, Button } from '@mui/material';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { DeleteOutlined as DeleteOutlineIcon } from '@mui/icons-material';
 import './ArtistCard.css';
 
 const ArtistCard = ({ artist, onDelete }) => {
