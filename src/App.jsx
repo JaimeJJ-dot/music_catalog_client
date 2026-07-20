@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/layout/Navbar';
 import Login from './pages/Login';
 import ArtistsPage from './pages/ArtistsPage';
-// import AlbumsPage from './pages/AlbumsPage'; // Lo habilitaremos en el siguiente módulo
+import AlbumsPage from './pages/AlbumsPage';
 
 // Componente Wrapper para blindar rutas privadas
 const ProtectedRoute = ({ children }) => {
@@ -27,6 +27,15 @@ function App() {
           element={
             <ProtectedRoute>
               <ArtistsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/albums"
+          element={
+            <ProtectedRoute>
+              <AlbumsPage />
             </ProtectedRoute>
           }
         />
