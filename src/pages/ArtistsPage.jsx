@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Grid, Typography, Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { getArtists, deleteArtist } from '../services/artistService';
+import { isLoggedIn } from '../utils/auth';
 import ArtistCard from '../components/artists/ArtistCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorState from '../components/common/ErrorState';
@@ -14,6 +15,7 @@ const ArtistsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const canEdit = isLoggedIn();
 
   // Función para insertar el nuevo artista en el estado de React al guardarlo:
   const handleArtistCreated = (newArtist) => {
@@ -89,15 +91,17 @@ const ArtistsPage = () => {
         <Typography variant="h4" component="h1" fontWeight="bold">
           Catálogo de Artistas
         </Typography>
-        {/* Agregamos el evento onClick para que el botón abra el Modal */}
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={() => setOpenModal(true)}
-        >
-          Nuevo Artista
-        </Button>
+        {/* Solo se muestra si hay sesión iniciada */}
+        {canEdit && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={() => setOpenModal(true)}
+          >
+            Nuevo Artista
+          </Button>
+        )}
       </Box>
 
       {artists.length === 0 ? (
@@ -106,18 +110,20 @@ const ArtistsPage = () => {
         <Grid container spacing={3}>
           {artists.map((artist) => (
             <Grid item xs={12} sm={6} md={4} key={artist.id}>
-              <ArtistCard artist={artist} onDelete={handleDelete} />
+              <ArtistCard artist={artist} onDelete={handleDelete} canEdit={canEdit} />
             </Grid>
           ))}
         </Grid>
       )}
 
       {/* Componente Modal de creación */}
-      <CreateArtistModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        onSuccess={handleArtistCreated}
-      />
+      {canEdit && (
+        <CreateArtistModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          onSuccess={handleArtistCreated}
+        />
+      )}
     </Container>
   );
 };

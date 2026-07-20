@@ -1,21 +1,62 @@
 // src/components/layout/Navbar.jsx
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Button, Box } from '@mui/material';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Logo from '../common/Logo';
 import './Navbar.css';
 
 const Navbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isLoggedIn = Boolean(localStorage.getItem('access_token'));
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    navigate('/login');
+  };
+
   return (
     <AppBar position="static" className="navbar-root">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          🎵 SoundCatalog API
-        </Typography>
-        <Box>
-          <Button color="inherit" component={Link} to="/">Artistas</Button>
-          <Button color="inherit" component={Link} to="/albums">Álbumes</Button>
-          <Button color="inherit" component={Link} to="/login" variant="outlined" sx={{ ml: 2, borderColor: 'white' }}>
-            Token OAuth
+        <Box sx={{ flexGrow: 1 }}>
+          <Logo />
+        </Box>
+        <Box className="navbar-links">
+          <Button
+            component={Link}
+            to="/artists"
+            className={`navbar-link ${location.pathname === '/artists' ? 'active' : ''}`}
+          >
+            Artistas
           </Button>
+          <Button
+            component={Link}
+            to="/albums"
+            className={`navbar-link ${location.pathname === '/albums' ? 'active' : ''}`}
+          >
+            Álbumes
+          </Button>
+          {isLoggedIn ? (
+            <Button
+              variant="contained"
+              color="primary"
+              className="navbar-cta"
+              onClick={handleLogout}
+              sx={{ ml: 2 }}
+            >
+              Cerrar sesión
+            </Button>
+          ) : (
+            <Button
+              component={Link}
+              to="/login"
+              variant="contained"
+              color="primary"
+              className="navbar-cta"
+              sx={{ ml: 2 }}
+            >
+              Iniciar sesión
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

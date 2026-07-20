@@ -1,13 +1,18 @@
-.albums-page-container {
+/* AlbumsPage.css / ArtistsPage.css — mismo patrón */
+.albums-page-container,
+.artists-page-container {
   padding-top: 2rem;
   padding-bottom: 4rem;
+  background-color: #121212;
+  min-height: 100vh;
 }
 
-.albums-page-header {
+.albums-page-header,
+.artists-page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }

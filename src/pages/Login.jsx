@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper, Alert } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import { loginWithOAuth } from '../services/authService';
 import './Login.css';
 
@@ -12,7 +12,6 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // NOTA: estos valores están definidos en variable de entorno (.env)
     const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
     const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
 
@@ -23,10 +22,8 @@ const Login = () => {
 
         try {
             const data = await loginWithOAuth(username, password, CLIENT_ID, CLIENT_SECRET);
-            // Guardamos el token en memoria para que el interceptor de Axios lo tome
             localStorage.setItem('access_token', data.access_token);
-            // Si todo sale bien, redirigimos al módulo de artistas
-            navigate('/artists');
+            navigate('/');
         } catch (err) {
             console.error("Error en login:", err);
             setError("Credenciales incorrectas o error en el servidor OAuth 2.0");
@@ -37,15 +34,18 @@ const Login = () => {
 
     return (
         <Box className="login-container">
-            <Paper elevation={3} className="login-paper">
+            <Paper elevation={0} className="login-paper">
                 <Box className="login-header">
-                    <LockOutlinedIcon color="primary" sx={{ fontSize: 40 }} />
-                    <Typography component="h1" variant="h5">
-                        Iniciar Sesión - Music API
+                    <LibraryMusicIcon className="login-icon" sx={{ fontSize: 48 }} />
+                    <Typography component="h1" variant="h5" className="login-title">
+                        Inicia sesión en SoundCatalog
+                    </Typography>
+                    <Typography variant="body2" className="login-subtitle">
+                        Accede con tu cuenta de Django para gestionar el catálogo
                     </Typography>
                 </Box>
 
-                {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                {error && <Alert severity="error" className="login-alert" sx={{ mb: 2 }}>{error}</Alert>}
 
                 <form onSubmit={handleLogin}>
                     <TextField
@@ -56,6 +56,7 @@ const Login = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         autoFocus
+                        className="login-input"
                     />
                     <TextField
                         margin="normal"
@@ -65,6 +66,7 @@ const Login = () => {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        className="login-input"
                     />
                     <Button
                         type="submit"
@@ -72,6 +74,7 @@ const Login = () => {
                         variant="contained"
                         color="primary"
                         disabled={loading}
+                        className="login-button"
                         sx={{ mt: 3, mb: 2, py: 1.5 }}
                     >
                         {loading ? "Autenticando..." : "Entrar al Catálogo"}

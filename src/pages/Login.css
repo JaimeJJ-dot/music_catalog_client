@@ -2,8 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
+    min-height: 85vh;
     padding: 1rem;
+    background-color: #121212;
 }
 
 .login-paper {
@@ -11,6 +12,8 @@
     max-width: 400px;
     width: 100%;
     border-radius: 12px;
+    background-color: #181818 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .login-header {
@@ -18,5 +21,60 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 1.5rem;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    text-align: center;
+}
+
+.login-icon {
+    color: #1DB954;
+    margin-bottom: 0.5rem;
+}
+
+.login-title {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+.login-subtitle {
+    color: #B3B3B3 !important;
+}
+
+.login-alert {
+    background-color: rgba(241, 94, 108, 0.15) !important;
+    color: #F15E6C !important;
+}
+
+/* Inputs estilo Spotify: fondo gris oscuro, borde que se pone verde al enfocar */
+.login-input .MuiOutlinedInput-root {
+    background-color: #2A2A2A;
+    border-radius: 4px;
+}
+
+.login-input .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.login-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.login-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #1DB954;
+}
+
+.login-input .MuiInputLabel-root {
+    color: #B3B3B3;
+}
+
+.login-input .MuiInputLabel-root.Mui-focused {
+    color: #1DB954;
+}
+
+.login-input .MuiOutlinedInput-input {
+    color: #FFFFFF;
+}
+
+.login-button {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
 }

@@ -1,0 +1,172 @@
+.home-page {
+  background-color: #121212;
+  min-height: 100vh;
+}
+
+/* Hero superior con degradado, como la cabecera de Spotify Home */
+.home-hero {
+  background: linear-gradient(180deg, #2d5a3d 0%, #1a3d2a 40%, #121212 100%);
+  padding-top: 3.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.home-greeting {
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  font-size: 2rem !important;
+  letter-spacing: -0.5px;
+}
+
+.home-subgreeting {
+  color: #D0D0D0 !important;
+  margin-top: 0.5rem !important;
+  font-size: 1rem !important;
+}
+
+.home-content {
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+}
+
+.home-section {
+  margin-bottom: 3rem;
+}
+
+.home-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+
+.home-section-title {
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  font-size: 1.5rem !important;
+}
+
+.home-see-all {
+  color: #B3B3B3 !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.home-see-all:hover {
+  color: #FFFFFF !important;
+  text-decoration: underline;
+}
+
+/* Fila de scroll horizontal, estilo "shelf" de Spotify */
+.home-scroll-row {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding: 0.5rem 0 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: #535353 transparent;
+}
+
+.home-scroll-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.home-scroll-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.home-scroll-row::-webkit-scrollbar-thumb {
+  background-color: #535353;
+  border-radius: 20px;
+}
+
+.home-scroll-row::-webkit-scrollbar-thumb:hover {
+  background-color: #727272;
+}
+
+.home-scroll-item {
+  flex: 0 0 200px;
+  transition: transform 0.2s ease;
+}
+
+.home-scroll-item:hover {
+  transform: translateY(-4px);
+}
+
+/* Responsive: en pantallas chicas, tarjetas un poco más angostas */
+@media (max-width: 600px) {
+  .home-hero {
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .home-greeting {
+    font-size: 1.5rem !important;
+  }
+
+  .home-scroll-item {
+    flex: 0 0 160px;
+  }
+}
+
+/* Grilla de acceso rápido: mini-tarjetas horizontales con imagen + nombre */
+.quick-access-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  text-decoration: none;
+  overflow: hidden;
+  transition: background-color 0.2s ease;
+  height: 64px;
+}
+
+.quick-access-card:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.quick-access-image {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.quick-access-name {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  padding-right: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-pill {
+  background-color: #2a2a2a !important;
+  color: #FFFFFF !important;
+  border-radius: 500px !important;
+  padding: 0.4rem 1.1rem !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  min-width: unset !important;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.filter-pill:hover {
+  background-color: #3a3a3a !important;
+}
+
+.filter-pill.active {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+}
