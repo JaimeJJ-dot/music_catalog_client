@@ -6,7 +6,7 @@ import { useState } from 'react';
 const CreateArtistModal = ({ open, onClose, onSuccess }) => {
     const [name, setName] = useState('');
     const [genre, setGenre] = useState('');
-    const [biography, setBiography] = useState('');
+    const [bio, setBio] = useState('');
     const [photo, setPhoto] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -19,8 +19,8 @@ const CreateArtistModal = ({ open, onClose, onSuccess }) => {
         try {
             const payload = {
                 name,
-                genre,
-                biography,
+                genre: genre || null, // Enviar null si no se especifica género
+                bio: bio || null, // Enviar null si no se especifica biografía
                 photo // String Base64 generado por ImageUploader
             };
             const response = await createArtist(payload);
@@ -37,7 +37,7 @@ const CreateArtistModal = ({ open, onClose, onSuccess }) => {
     const handleClose = () => {
         setName('');
         setGenre('');
-        setBiography('');
+        setBio('');
         setPhoto('');
         setError(null);
         onClose();
@@ -71,8 +71,8 @@ const CreateArtistModal = ({ open, onClose, onSuccess }) => {
                         multiline
                         rows={3}
                         margin="normal"
-                        value={biography}
-                        onChange={(e) => setBiography(e.target.value)}
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
                     />
                     <ImageUploader label="Foto del Artista (Base64)" value={photo} onChange={setPhoto} />
                 </DialogContent>

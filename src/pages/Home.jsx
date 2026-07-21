@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Container, Typography, Box, Button, Grid } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { getArtists } from '../services/artistService';
-import { getAlbums } from '../services/albumService';
+import { getArtists, deleteArtist } from '../services/artistService';
+import { getAlbums, deleteAlbum } from '../services/albumService';
 import { isLoggedIn } from '../utils/auth';
 import ArtistCard from '../components/artists/ArtistCard';
 import AlbumCard from '../components/albums/AlbumCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorState from '../components/common/ErrorState';
 import EmptyState from '../components/common/EmptyState';
+import EditArtistModal from '../components/artists/EditArtistModal';
+import EditAlbumModal from '../components/albums/EditAlbumModal';
 import './Home.css';
 
 const getGreeting = () => {
@@ -16,6 +18,21 @@ const getGreeting = () => {
   if (hour < 12) return 'Buenos días';
   if (hour < 19) return 'Buenas tardes';
   return 'Buenas noches';
+};
+
+// Función auxiliar para formatear la URL de las miniaturas de acceso rápido
+const getValidImageUrl = (path) => {
+  const fallback = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&auto=format&fit=crop";
+  if (!path) return fallback;
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:image')) {
+    return path;
+  }
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+  let cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (!cleanPath.startsWith('/media/') && !cleanPath.startsWith('/static/')) {
+    cleanPath = `/media${cleanPath}`;
+  }
+  return `${baseUrl}${cleanPath}`;
 };
 
 const Home = () => {
@@ -27,8 +44,49 @@ const Home = () => {
   const navigate = useNavigate();
   const canEdit = isLoggedIn();
   const username = localStorage.getItem('username');
+  
+  // Estados para modales de edición
+  const [editingArtist, setEditingArtist] = useState(null);
+  const [openEditArtist, setOpenEditArtist] = useState(false);
+  const [editingAlbum, setEditingAlbum] = useState(null);
+  const [openEditAlbum, setOpenEditAlbum] = useState(false);
 
-  const fetchHomeData = async () => {
+  // Aislamos la consulta dentro del efecto sin disparar estados síncronos innecesarios al montar
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchInitialData = async () => {
+      try {
+        const [artistsRes, albumsRes] = await Promise.all([
+          getArtists(),
+          getAlbums(),
+        ]);
+        if (isMounted) {
+          setArtists(artistsRes.data);
+          setAlbums(albumsRes.data);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error al cargar la página de inicio:", err);
+        if (isMounted) {
+          setError("No pudimos cargar el inicio. Verifica tu conexión o sesión de OAuth.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchInitialData();
+
+    return () => {
+      isMounted = false; // Patrón de limpieza para evitar fugas de memoria si cambias de página rápido
+    };
+  }, []);
+
+  // Función independiente exclusiva para cuando el usuario presiona "Reintentar" en la pantalla de error
+  const handleRetry = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -39,24 +97,63 @@ const Home = () => {
       setArtists(artistsRes.data);
       setAlbums(albumsRes.data);
     } catch (err) {
-      console.error("Error al cargar la página de inicio:", err);
+      console.error("Error al reintentar carga:", err);
       setError("No pudimos cargar el inicio. Verifica tu conexión o sesión de OAuth.");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchHomeData();
-  }, []);
+  // Funciones de manejo de edición y eliminación para Artistas
+  const handleEditArtistClick = (artist) => {
+    setEditingArtist(artist);
+    setOpenEditArtist(true);
+  };
+
+  const handleDeleteArtistClick = async (id) => {
+    if (window.confirm("¿Estás seguro de eliminar este artista?")) {
+      try {
+        await deleteArtist(id);
+        setArtists((prev) => prev.filter((a) => a.id !== id));
+      } catch (err) {
+        console.error("Error eliminando artista:", err);
+        alert("Ocurrió un error al intentar eliminar el artista.");
+      }
+    }
+  };
+
+  const handleArtistUpdated = (updatedArtist) => {
+    setArtists((prev) => prev.map((art) => (art.id === updatedArtist.id ? updatedArtist : art)));
+  };
+
+  // Funciones de manejo de edición y eliminación para Álbumes
+  const handleEditAlbumClick = (album) => {
+    setEditingAlbum(album);
+    setOpenEditAlbum(true);
+  };
+
+  const handleDeleteAlbumClick = async (id) => {
+    if (window.confirm("¿Estás seguro de eliminar este álbum?")) {
+      try {
+        await deleteAlbum(id);
+        setAlbums((prev) => prev.filter((a) => a.id !== id));
+      } catch (err) {
+        console.error("Error eliminando álbum:", err);
+        alert("Ocurrió un error al intentar eliminar el álbum.");
+      }
+    }
+  };
+
+  const handleAlbumUpdated = (updatedAlbum) => {
+    setAlbums((prev) => prev.map((alb) => (alb.id === updatedAlbum.id ? updatedAlbum : alb)));
+  };
 
   if (loading) {
     return <LoadingSpinner message="Preparando tu inicio..." />;
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={fetchHomeData} />;
+    return <ErrorState message={error} onRetry={handleRetry} />;
   }
 
   // Mezcla de artistas + álbumes para el "acceso rápido", máximo 6 tarjetas
@@ -126,7 +223,7 @@ const Home = () => {
                     <Box
                       className="quick-access-image"
                       sx={{
-                        backgroundImage: `url(${item.image || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&auto=format&fit=crop'})`,
+                        backgroundImage: `url(${getValidImageUrl(item.image)})`,
                       }}
                     />
                     <Typography className="quick-access-name">{item.name}</Typography>
@@ -161,7 +258,12 @@ const Home = () => {
               <Box className="home-scroll-row">
                 {artists.slice(0, 6).map((artist) => (
                   <Box className="home-scroll-item" key={artist.id}>
-                    <ArtistCard artist={artist} />
+                    <ArtistCard 
+                      artist={artist} 
+                      canEdit={canEdit}
+                      onEdit={handleEditArtistClick}
+                      onDelete={handleDeleteArtistClick}
+                    />
                   </Box>
                 ))}
               </Box>
@@ -193,12 +295,41 @@ const Home = () => {
               <Box className="home-scroll-row">
                 {albums.slice(0, 6).map((album) => (
                   <Box className="home-scroll-item" key={album.id}>
-                    <AlbumCard album={album} />
+                    <AlbumCard 
+                      album={album} 
+                      canEdit={canEdit}
+                      onEdit={handleEditAlbumClick}
+                      onDelete={handleDeleteAlbumClick}
+                    />
                   </Box>
                 ))}
               </Box>
             )}
           </Box>
+        )}
+
+        {/* Modales de edición */}
+        {canEdit && (
+          <>
+            <EditArtistModal
+              open={openEditArtist}
+              onClose={() => {
+                setOpenEditArtist(false);
+                setEditingArtist(null);
+              }}
+              artist={editingArtist}
+              onSuccess={handleArtistUpdated}
+            />
+            <EditAlbumModal
+              open={openEditAlbum}
+              onClose={() => {
+                setOpenEditAlbum(false);
+                setEditingAlbum(null);
+              }}
+              album={editingAlbum}
+              onSuccess={handleAlbumUpdated}
+            />
+          </>
         )}
       </Container>
     </Box>

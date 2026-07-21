@@ -7,7 +7,7 @@ import ImageUploader from '../common/ImageUploader';
 const EditArtistModal = ({ open, onClose, onSuccess, artist }) => {
     const [name, setName] = useState('');
     const [genre, setGenre] = useState('');
-    const [biography, setBiography] = useState('');
+    const [bio, setBio] = useState('');
     const [photo, setPhoto] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ const EditArtistModal = ({ open, onClose, onSuccess, artist }) => {
             if (isMounted && artist && open) {
                 setName(artist.name || '');
                 setGenre(artist.genre || '');
-                setBiography(artist.biography || '');
+                setBio(artist.bio || '');
                 setPhoto(artist.photo || '');
                 setError(null);
             }
@@ -39,7 +39,7 @@ const EditArtistModal = ({ open, onClose, onSuccess, artist }) => {
         setLoading(true);
         setError(null);
         try {
-            const payload = { name, genre, biography, photo };
+            const payload = { name, genre: genre || null, bio: bio || null, photo };
             const response = await updateArtist(artist.id, payload);
             onSuccess(response.data); // Mandamos el artista actualizado a la página
             onClose();
@@ -76,7 +76,7 @@ const EditArtistModal = ({ open, onClose, onSuccess, artist }) => {
                     <TextField
                         label="Biografía"
                         fullWidth multiline rows={3} margin="normal"
-                        value={biography} onChange={(e) => setBiography(e.target.value)}
+                        value={bio} onChange={(e) => setBio(e.target.value)}
                         InputLabelProps={{ style: { color: '#b3b3b3' } }}
                         InputProps={{ style: { color: '#ffffff' } }}
                     />
