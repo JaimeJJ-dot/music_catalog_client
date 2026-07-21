@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Grid, Typography, Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { getArtists, deleteArtist } from '../services/artistService';
-import { isLoggedIn } from '../utils/auth';
+import { isLoggedIn } from '../services/authService';
 import ArtistCard from '../components/artists/ArtistCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorState from '../components/common/ErrorState';
@@ -22,7 +22,7 @@ const ArtistsPage = () => {
 
   // Función para insertar el nuevo artista en el estado de React al guardarlo:
   const handleArtistCreated = (newArtist) => {
-    setArtists([newArtist, ...artists]); // Lo ponemos de primero en la lista
+    setArtists((prev) => [newArtist, ...prev]);
   };
 
   // Funciones de manejo de edición:
@@ -32,13 +32,12 @@ const ArtistsPage = () => {
   };
 
   const handleArtistUpdated = (updatedArtist) => {
-    // Mapeamos y reemplazamos únicamente el artista modificado en el arreglo actual de React
-    setArtists(artists.map((art) => (art.id === updatedArtist.id ? updatedArtist : art)));
+    setArtists((prev) => prev.map((art) => (art.id === updatedArtist.id ? updatedArtist : art)));
   };
 
-  // Aislamos la consulta asíncrona dentro del efecto para cumplir las reglas estrictas de React Hooks
+  // Aislamos la consulta asíncrona dentro del efecto para cumplir las reglas de React Hooks
   useEffect(() => {
-    let isMounted = true; // Buena práctica para evitar actualizar estados si el usuario cambia de página rápido
+    let isMounted = true;
 
     const fetchArtists = async () => {
       try {
@@ -66,24 +65,27 @@ const ArtistsPage = () => {
     };
   }, []);
 
-  // Función de reintento para pasársela al ErrorState si algo falla
-  const handleRetry = () => {
+  // Función de reintento estandarizada a async/await
+  const handleRetry = async () => {
     setLoading(true);
     setError(null);
-    getArtists()
-      .then((res) => setArtists(res.data))
-      .catch((err) => {
-        console.error(err);
-        setError("Error de red persistente. Intenta más tarde.");
-      })
-      .finally(() => setLoading(false));
+    try {
+      const response = await getArtists();
+      setArtists(response.data);
+    } catch (err) {
+      console.error(err);
+      setError("Error de red persistente. Intenta más tarde.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar este artista?")) {
       try {
         await deleteArtist(id);
-        setArtists(artists.filter((a) => a.id !== id));
+        // Corrección aquí usando (prev) => ...
+        setArtists((prev) => prev.filter((a) => a.id !== id));
       } catch (err) {
         console.error("Error eliminando registro:", err);
         alert("Ocurrió un error al intentar eliminar el registro.");
@@ -105,7 +107,6 @@ const ArtistsPage = () => {
         <Typography variant="h4" component="h1" fontWeight="bold">
           Catálogo de Artistas
         </Typography>
-        {/* Solo se muestra si hay sesión iniciada */}
         {canEdit && (
           <Button
             variant="contained"
@@ -124,33 +125,30 @@ const ArtistsPage = () => {
         <Grid container spacing={3}>
           {artists.map((artist) => (
             <Grid item xs={12} sm={6} md={4} key={artist.id}>
-              {/* 4. Pasa la prop onEdit al mapear el Grid: */}
               <ArtistCard artist={artist} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
             </Grid>
           ))}
         </Grid>
       )}
 
-      {/* Componente Modal de creación */}
+      {/* Componentes Modales de creación y edición */}
       {canEdit && (
-        <CreateArtistModal
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          onSuccess={handleArtistCreated}
-        />
-      )}
-
-      {/* Agrega el modal al final del JSX (antes del cierre de Container): */}
-      {canEdit && (
-        <EditArtistModal
-          open={openEditModal}
-          onClose={() => {
-            setOpenEditModal(false);
-            setEditingArtist(null);
-          }}
-          onSuccess={handleArtistUpdated}
-          artist={editingArtist}
-        />
+        <>
+          <CreateArtistModal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            onSuccess={handleArtistCreated}
+          />
+          <EditArtistModal
+            open={openEditModal}
+            onClose={() => {
+              setOpenEditModal(false);
+              setEditingArtist(null);
+            }}
+            onSuccess={handleArtistUpdated}
+            artist={editingArtist}
+          />
+        </>
       )}
     </Container>
   );

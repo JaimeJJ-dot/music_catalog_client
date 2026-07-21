@@ -3,7 +3,7 @@ import { Card, CardContent, CardMedia, Typography, Box, Button } from '@mui/mate
 import { DeleteOutlined as DeleteIcon, AlbumOutlined as AlbumIcon, EditOutlined as EditIcon } from '@mui/icons-material';
 import './ArtistCard.css';
 
-const ArtistCard = ({ artist, onDelete, onEdit }) => {
+const ArtistCard = ({ artist, onDelete, onEdit, canEdit }) => {
   const navigate = useNavigate();
 
   const fallbackPhoto = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80";
@@ -74,7 +74,8 @@ const ArtistCard = ({ artist, onDelete, onEdit }) => {
           >
             Ver discografía
           </Button>
-
+          
+          {canEdit && (
           <Button
             variant="outlined"
             size="small"
@@ -90,7 +91,9 @@ const ArtistCard = ({ artist, onDelete, onEdit }) => {
           >
             Editar
           </Button>
+          )}
 
+          {canEdit && (
           <Button
             variant="outlined"
             color="error"
@@ -101,6 +104,7 @@ const ArtistCard = ({ artist, onDelete, onEdit }) => {
           >
             Eliminar
           </Button>
+          )}
         </Box>
       </CardContent>
     </Card>

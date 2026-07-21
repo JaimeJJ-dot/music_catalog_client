@@ -1,18 +1,25 @@
 // src/components/layout/Navbar.jsx
 import { AppBar, Toolbar, Button, Box } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { isLoggedIn as checkAuth } from "../../services/authService";
 import Logo from '../common/Logo';
 import './Navbar.css';
 
 const Navbar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const isLoggedIn = Boolean(localStorage.getItem('access_token'));
+  const isLoggedIn = checkAuth();
 
   const handleLogout = () => {
+    // Limpiamos absolutamente todas las llaves de la sesión en el navegador
+    localStorage.removeItem('token');
     localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('username');
-    navigate('/');
+    localStorage.clear(); // Por seguridad, limpia cualquier rastro residual
+    // Usamos window.location.href en vez de navigate()
+    // Esto obliga al navegador a limpiar toda la memoria caché de React, 
+    // recalcular el isLoggedIn() a false en todos los componentes y mandarte al inicio limpio.
+    window.location.href = '/';
   };
 
   return (

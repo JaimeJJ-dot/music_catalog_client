@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Grid, Typography, Box, Button } from '@mui/material';
 import { AddOutlined as AddOutlineIcon, FilterAltOffOutlined as FilterOffIcon } from '@mui/icons-material';
 import { getAlbums, deleteAlbum } from '../services/albumService';
-import { isLoggedIn } from '../utils/auth';
+import { isLoggedIn } from '../services/authService';
 import AlbumCard from '../components/albums/AlbumCard';
 import CreateAlbumModal from '../components/albums/CreateAlbumModal';
 import EditAlbumModal from '../components/albums/EditAlbumModal';
@@ -23,9 +23,9 @@ const AlbumsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const artistIdFilter = searchParams.get('artistId');
 
-  // Función para insertar el nuevo álbum en el estado de React al guardarlo:
+  // Uso de (prev) para evitar cierres obsoletos (stale closures)
   const handleAlbumCreated = (newAlbum) => {
-    setAlbums([newAlbum, ...albums]);
+    setAlbums((prev) => [newAlbum, ...prev]);
   };
 
   // Funciones de manejo de edición:
@@ -35,8 +35,7 @@ const AlbumsPage = () => {
   };
 
   const handleAlbumUpdated = (updatedAlbum) => {
-    // Mapeamos y reemplazamos únicamente el disco modificado en el arreglo actual de React
-    setAlbums(albums.map((alb) => (alb.id === updatedAlbum.id ? updatedAlbum : alb)));
+    setAlbums((prev) => prev.map((alb) => (alb.id === updatedAlbum.id ? updatedAlbum : alb)));
   };
 
   // Consulta aislada dentro del hook con patrón de limpieza (Effect Cleanup Pattern)
@@ -69,24 +68,27 @@ const AlbumsPage = () => {
     };
   }, []);
 
-  // Función independiente para manejar el reintento desde el componente ErrorState
-  const handleRetry = () => {
+  // Estandarizado a async/await
+  const handleRetry = async () => {
     setLoading(true);
     setError(null);
-    getAlbums()
-      .then((res) => setAlbums(res.data))
-      .catch((err) => {
-        console.error(err);
-        setError("Error de red persistente. Intenta más tarde.");
-      })
-      .finally(() => setLoading(false));
+    try {
+      const response = await getAlbums();
+      setAlbums(response.data);
+    } catch (err) {
+      console.error(err);
+      setError("Error de red persistente. Intenta más tarde.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar este álbum del catálogo?")) {
       try {
         await deleteAlbum(id);
-        setAlbums(albums.filter((a) => a.id !== id));
+        // 1. Uso de (prev) al filtrar álbumes eliminados
+        setAlbums((prev) => prev.filter((a) => a.id !== id));
       } catch (err) {
         console.error("Error al eliminar álbum:", err);
         alert("Ocurrió un error al intentar eliminar el disco.");
@@ -175,7 +177,6 @@ const AlbumsPage = () => {
         <Grid container spacing={3}>
           {displayedAlbums.map((album) => (
             <Grid item xs={12} sm={6} md={4} key={album.id}>
-              {/* 4. Pasa la prop onEdit al mapear el Grid: */}
               <AlbumCard album={album} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
             </Grid>
           ))}
@@ -191,7 +192,7 @@ const AlbumsPage = () => {
         />
       )}
 
-      {/* Agrega el modal de edición al final del JSX: */}
+      {/* Componente Modal de edición */}
       {canEdit && (
         <EditAlbumModal
           open={openEditModal}
