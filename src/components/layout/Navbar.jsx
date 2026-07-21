@@ -11,13 +11,13 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
     <AppBar position="static" className="navbar-root">
       <Toolbar>
-        <Box sx={{ flexGrow: 1 }}>
+        <Box component={Link} to="/" sx={{ flexGrow: 1, textDecoration: 'none' }}>
           <Logo />
         </Box>
         <Box className="navbar-links">
