@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardMedia, Typography, Box, Button } from '@mui/material';
-import { DeleteOutlined as DeleteIcon, AlbumOutlined as AlbumIcon } from '@mui/icons-material';
+import { DeleteOutlined as DeleteIcon, AlbumOutlined as AlbumIcon, EditOutlined as EditIcon } from '@mui/icons-material';
 import './ArtistCard.css';
 
-const ArtistCard = ({ artist, onDelete }) => {
+// 1. Recibimos correctamente onEdit como propiedad en el componente para eliminar el error del linter
+const ArtistCard = ({ artist, onDelete, onEdit }) => {
   const navigate = useNavigate();
 
   const fallbackPhoto = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80";
@@ -34,12 +35,11 @@ const ArtistCard = ({ artist, onDelete }) => {
         </Typography>
 
         {/* Contenedor de botones optimizado para el tema Vynlo */}
-        <Box className="artist-actions" sx={{ display: 'flex', gap: 1, justifyContent: 'space-between', mt: 'auto', pt: 2, borderTop: '1px solid #282828' }}>
+        <Box className="artist-actions" sx={{ display: 'flex', gap: 1, justifyContent: 'space-between', mt: 'auto', pt: 2, borderTop: '1px solid #282828', flexWrap: 'wrap' }}>
           <Button
             variant="contained"
             size="small"
             startIcon={<AlbumIcon />}
-            // Navegamos a álbumes pasando el ID del artista en la URL
             onClick={() => navigate(`/albums?artistId=${artist.id}`)}
             sx={{
               backgroundColor: '#1db954',
@@ -51,6 +51,22 @@ const ArtistCard = ({ artist, onDelete }) => {
             }}
           >
             Ver discografía
+          </Button>
+
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<EditIcon />}
+            onClick={() => onEdit(artist)}
+            sx={{
+              color: '#ffffff',
+              borderColor: '#535353',
+              borderRadius: '20px',
+              textTransform: 'none',
+              '&:hover': { borderColor: '#ffffff', backgroundColor: 'rgba(255,255,255,0.05)' }
+            }}
+          >
+            Editar
           </Button>
 
           <Button

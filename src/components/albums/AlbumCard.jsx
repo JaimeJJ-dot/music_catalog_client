@@ -1,12 +1,13 @@
 import { Card, CardContent, CardMedia, Typography, Box, Button } from '@mui/material';
-import { DeleteOutlined as DeleteIcon } from '@mui/icons-material';
+import { DeleteOutlined as DeleteIcon, EditOutlined as EditIcon } from '@mui/icons-material';
 import './AlbumCard.css';
 
-const AlbumCard = ({ album, onDelete }) => {
-  // 1. URL de respaldo (portada genérica musical en alta calidad)
+// 1. Recibimos correctamente onEdit, canEdit y album para que ESLint no marque errores
+const AlbumCard = ({ album, onDelete, onEdit}) => {
+  // URL de respaldo (portada genérica musical en alta calidad)
   const fallbackCover = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80";
 
-  // 2. Si Django devuelve una ruta relativa (/media/...), le agregamos el host del backend
+  // 2. Restauramos tu lógica vital: Si Django devuelve una ruta relativa (/media/...), le agregamos el host del backend
   const getValidImageSource = (cover) => {
     if (!cover) return fallbackCover;
     if (cover.startsWith('/')) {
@@ -19,7 +20,7 @@ const AlbumCard = ({ album, onDelete }) => {
   const imageSource = getValidImageSource(album.cover);
 
   return (
-    <Card className="album-card" elevation={2}>
+    <Card className="album-card" elevation={2} sx={{ backgroundColor: '#181818', color: '#ffffff', border: '1px solid #282828' }}>
       <CardMedia
         component="img"
         height="220"
@@ -40,10 +41,27 @@ const AlbumCard = ({ album, onDelete }) => {
           {album.artist_name || 'Artista Desconocido'}
         </Typography>
         <Typography variant="body2" sx={{ color: '#b3b3b3', mb: 2 }}>
-          Lanzamiento: <strong>{album.release_date || 'No registrado'}</strong>
+          Lanzamiento: <strong style={{ color: '#ffffff' }}>{album.release_date || 'No registrado'}</strong>
         </Typography>
 
-        <Box className="album-actions">
+        {/* 4. Agrupamos ambos botones ordenadamente y los protegemos con canEdit si es necesario */}
+        <Box className="album-actions" sx={{ borderTop: '1px solid #282828', pt: 1, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<EditIcon />}
+            onClick={() => onEdit(album)} // Corregido: pasamos album y no artist
+            sx={{
+              color: '#ffffff',
+              borderColor: '#535353',
+              borderRadius: '20px',
+              textTransform: 'none',
+              '&:hover': { borderColor: '#ffffff', backgroundColor: 'rgba(255,255,255,0.05)' }
+            }}
+          >
+            Editar
+          </Button>
+
           <Button
             variant="outlined"
             color="error"
