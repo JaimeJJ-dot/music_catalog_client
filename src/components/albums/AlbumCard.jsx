@@ -7,14 +7,26 @@ const AlbumCard = ({ album, onDelete, onEdit}) => {
   // URL de respaldo (portada genérica musical en alta calidad)
   const fallbackCover = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80";
 
-  // 2. Restauramos tu lógica vital: Si Django devuelve una ruta relativa (/media/...), le agregamos el host del backend
+  // 2. Función blindada para construir la URL web real hacia el backend de Django
   const getValidImageSource = (cover) => {
     if (!cover) return fallbackCover;
-    if (cover.startsWith('/')) {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-      return `${baseUrl}${cover}`;
+    
+    // Si ya es un enlace web completo (http...) o una imagen en Base64 cruda, la usamos directo
+    if (cover.startsWith('http://') || cover.startsWith('https://') || cover.startsWith('data:image')) {
+      return cover;
     }
-    return cover;
+    
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+    
+    // Aseguramos que la ruta empiece con una diagonal '/'
+    let cleanPath = cover.startsWith('/') ? cover : `/${cover}`;
+    
+    // Si Django nos devolvió solo el nombre del archivo (ej: "/album_cover_xxx.jpeg"), le anteponemos "/media"
+    if (!cleanPath.startsWith('/media/') && !cleanPath.startsWith('/static/')) {
+      cleanPath = `/media${cleanPath}`;
+    }
+    
+    return `${baseUrl}${cleanPath}`;
   };
 
   const imageSource = getValidImageSource(album.cover);
