@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Typography, Box, Button, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getArtists } from '../services/artistService';
 import { getAlbums } from '../services/albumService';
+import { isLoggedIn } from '../utils/auth';
 import ArtistCard from '../components/artists/ArtistCard';
 import AlbumCard from '../components/albums/AlbumCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -23,6 +24,9 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('todo');
+  const navigate = useNavigate();
+  const canEdit = isLoggedIn();
+  const username = localStorage.getItem('username');
 
   const fetchHomeData = async () => {
     setLoading(true);
@@ -64,17 +68,30 @@ const Home = () => {
   const isEmpty = artists.length === 0 && albums.length === 0;
   const showArtists = filter === 'todo' || filter === 'artistas';
   const showAlbums = filter === 'todo' || filter === 'albumes';
+  const displayName = canEdit && username ? username.charAt(0).toUpperCase() + username.slice(1) : '';
 
   return (
     <Box className="home-page">
       {/* Hero / saludo estilo Spotify */}
       <Box className="home-hero">
         <Container maxWidth="lg">
-            <Typography variant="h4" className="home-greeting">
-            {getGreeting()}
-            </Typography>
+          <Box className="home-greeting-row">
+            <Box className="home-avatar">
+              {canEdit && username ? username[0].toUpperCase() : '?'}
+            </Box>
+            <Box>
+              <Typography variant="h4" className="home-greeting">
+                {getGreeting()}{displayName ? ` - ${displayName}` : ''}
+              </Typography>
+              <Typography variant="body2" className="home-subgreeting">
+                {isEmpty
+                  ? 'Tu catálogo está vacío por ahora'
+                  : `${artists.length} artista${artists.length !== 1 ? 's' : ''} · ${albums.length} álbum${albums.length !== 1 ? 'es' : ''} en tu catálogo`}
+              </Typography>
+            </Box>
+          </Box>
         </Container>
-        </Box>
+      </Box>
 
       <Container maxWidth="lg" className="home-content">
         {/* Chips de filtro */}
@@ -127,13 +144,19 @@ const Home = () => {
               <Typography variant="h5" className="home-section-title">
                 Artistas destacados
               </Typography>
-              <Button component={Link} to="/artists" className="home-see-all">
-                Ver todos
-              </Button>
+              {artists.length > 0 && (
+                <Button component={Link} to="/artists" className="home-see-all">
+                  Ver todos
+                </Button>
+              )}
             </Box>
 
             {artists.length === 0 ? (
-              <EmptyState message="Aún no hay artistas registrados." />
+              <EmptyState
+                message="Aún no hay artistas registrados."
+                actionLabel={canEdit ? 'Agregar artista' : undefined}
+                onAction={canEdit ? () => navigate('/artists') : undefined}
+              />
             ) : (
               <Box className="home-scroll-row">
                 {artists.slice(0, 6).map((artist) => (
@@ -153,13 +176,19 @@ const Home = () => {
               <Typography variant="h5" className="home-section-title">
                 Álbumes recientes
               </Typography>
-              <Button component={Link} to="/albums" className="home-see-all">
-                Ver todos
-              </Button>
+              {albums.length > 0 && (
+                <Button component={Link} to="/albums" className="home-see-all">
+                  Ver todos
+                </Button>
+              )}
             </Box>
 
             {albums.length === 0 ? (
-              <EmptyState message="Aún no hay álbumes registrados." />
+              <EmptyState
+                message="Aún no hay álbumes registrados."
+                actionLabel={canEdit ? 'Agregar álbum' : undefined}
+                onAction={canEdit ? () => navigate('/albums') : undefined}
+              />
             ) : (
               <Box className="home-scroll-row">
                 {albums.slice(0, 6).map((album) => (
