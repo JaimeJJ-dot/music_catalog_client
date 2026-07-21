@@ -9,17 +9,31 @@ import ErrorState from '../components/common/ErrorState';
 import EmptyState from '../components/common/EmptyState';
 import './ArtistsPage.css';
 import CreateArtistModal from '../components/artists/CreateArtistModal';
+import EditArtistModal from '../components/artists/EditArtistModal';
 
 const ArtistsPage = () => {
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [editingArtist, setEditingArtist] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const canEdit = isLoggedIn();
 
   // Función para insertar el nuevo artista en el estado de React al guardarlo:
   const handleArtistCreated = (newArtist) => {
     setArtists([newArtist, ...artists]); // Lo ponemos de primero en la lista
+  };
+
+  // Funciones de manejo de edición:
+  const handleEditClick = (artist) => {
+    setEditingArtist(artist);
+    setOpenEditModal(true);
+  };
+
+  const handleArtistUpdated = (updatedArtist) => {
+    // Mapeamos y reemplazamos únicamente el artista modificado en el arreglo actual de React
+    setArtists(artists.map((art) => (art.id === updatedArtist.id ? updatedArtist : art)));
   };
 
   // Aislamos la consulta asíncrona dentro del efecto para cumplir las reglas estrictas de React Hooks
@@ -110,7 +124,8 @@ const ArtistsPage = () => {
         <Grid container spacing={3}>
           {artists.map((artist) => (
             <Grid item xs={12} sm={6} md={4} key={artist.id}>
-              <ArtistCard artist={artist} onDelete={handleDelete} canEdit={canEdit} />
+              {/* 4. Pasa la prop onEdit al mapear el Grid: */}
+              <ArtistCard artist={artist} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
             </Grid>
           ))}
         </Grid>
@@ -122,6 +137,19 @@ const ArtistsPage = () => {
           open={openModal}
           onClose={() => setOpenModal(false)}
           onSuccess={handleArtistCreated}
+        />
+      )}
+
+      {/* Agrega el modal al final del JSX (antes del cierre de Container): */}
+      {canEdit && (
+        <EditArtistModal
+          open={openEditModal}
+          onClose={() => {
+            setOpenEditModal(false);
+            setEditingArtist(null);
+          }}
+          onSuccess={handleArtistUpdated}
+          artist={editingArtist}
         />
       )}
     </Container>

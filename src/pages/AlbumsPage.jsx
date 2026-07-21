@@ -1,4 +1,3 @@
-// src/pages/AlbumsPage.jsx
 import { useState, useEffect } from 'react';
 import { Container, Grid, Typography, Box, Button } from '@mui/material';
 import { AddOutlined as AddOutlineIcon, FilterAltOffOutlined as FilterOffIcon } from '@mui/icons-material';
@@ -6,6 +5,7 @@ import { getAlbums, deleteAlbum } from '../services/albumService';
 import { isLoggedIn } from '../utils/auth';
 import AlbumCard from '../components/albums/AlbumCard';
 import CreateAlbumModal from '../components/albums/CreateAlbumModal';
+import EditAlbumModal from '../components/albums/EditAlbumModal';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorState from '../components/common/ErrorState';
 import EmptyState from '../components/common/EmptyState';
@@ -17,11 +17,29 @@ const AlbumsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [editingAlbum, setEditingAlbum] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const canEdit = isLoggedIn();
   const [searchParams, setSearchParams] = useSearchParams();
   const artistIdFilter = searchParams.get('artistId');
 
-  // 1. Consulta aislada dentro del hook con patrón de limpieza (Effect Cleanup Pattern)
+  // Función para insertar el nuevo álbum en el estado de React al guardarlo:
+  const handleAlbumCreated = (newAlbum) => {
+    setAlbums([newAlbum, ...albums]);
+  };
+
+  // Funciones de manejo de edición:
+  const handleEditClick = (album) => {
+    setEditingAlbum(album);
+    setOpenEditModal(true);
+  };
+
+  const handleAlbumUpdated = (updatedAlbum) => {
+    // Mapeamos y reemplazamos únicamente el disco modificado en el arreglo actual de React
+    setAlbums(albums.map((alb) => (alb.id === updatedAlbum.id ? updatedAlbum : alb)));
+  };
+
+  // Consulta aislada dentro del hook con patrón de limpieza (Effect Cleanup Pattern)
   useEffect(() => {
     let isMounted = true;
 
@@ -51,7 +69,7 @@ const AlbumsPage = () => {
     };
   }, []);
 
-  // 2. Función independiente para manejar el reintento desde el componente ErrorState
+  // Función independiente para manejar el reintento desde el componente ErrorState
   const handleRetry = () => {
     setLoading(true);
     setError(null);
@@ -76,10 +94,6 @@ const AlbumsPage = () => {
     }
   };
 
-  const handleAlbumCreated = (newAlbum) => {
-    setAlbums([newAlbum, ...albums]);
-  };
-
   if (loading) {
     return <LoadingSpinner message="Consultando discografía en el servidor..." />;
   }
@@ -88,7 +102,7 @@ const AlbumsPage = () => {
     return <ErrorState message={error} onRetry={handleRetry} />;
   }
 
-  const displayedAlbums = artistIdFilter
+  const displayedAlbums = artistIdFilter 
     ? albums.filter(album => String(album.artist) === String(artistIdFilter))
     : albums;
 
@@ -99,13 +113,13 @@ const AlbumsPage = () => {
           Discografía y Álbumes
         </Typography>
         {canEdit && (
-          <Button
-            variant="contained"
-            startIcon={<AddOutlineIcon />}
+          <Button 
+            variant="contained" 
+            startIcon={<AddOutlineIcon />} 
             onClick={() => setOpenModal(true)}
-            sx={{
-              backgroundColor: '#1db954',
-              color: '#000000',
+            sx={{ 
+              backgroundColor: '#1db954', 
+              color: '#000000', 
               fontWeight: 'bold',
               borderRadius: '20px',
               textTransform: 'none',
@@ -118,14 +132,14 @@ const AlbumsPage = () => {
       </Box>
 
       {artistIdFilter && (
-        <Box sx={{
-          mb: 3,
-          p: 2,
-          backgroundColor: '#181818',
-          border: '1px solid #282828',
-          borderRadius: '10px',
-          display: 'flex',
-          justifyContent: 'space-between',
+        <Box sx={{ 
+          mb: 3, 
+          p: 2, 
+          backgroundColor: '#181818', 
+          border: '1px solid #282828', 
+          borderRadius: '10px', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: 2
@@ -133,14 +147,14 @@ const AlbumsPage = () => {
           <Typography variant="body1" sx={{ color: '#1db954', fontWeight: '500' }}>
             ⚡ Mostrando únicamente la discografía del artista seleccionado
           </Typography>
-          <Button
-            variant="outlined"
-            size="small"
+          <Button 
+            variant="outlined" 
+            size="small" 
             startIcon={<FilterOffIcon />}
             onClick={() => setSearchParams({})}
-            sx={{
-              color: '#ffffff',
-              borderColor: '#535353',
+            sx={{ 
+              color: '#ffffff', 
+              borderColor: '#535353', 
               borderRadius: '20px',
               textTransform: 'none',
               '&:hover': { borderColor: '#ffffff', backgroundColor: 'rgba(255,255,255,0.05)' }
@@ -153,25 +167,40 @@ const AlbumsPage = () => {
 
       {displayedAlbums.length === 0 ? (
         <EmptyState message={
-          artistIdFilter
-            ? "Este artista aún no tiene álbumes registrados en el catálogo."
+          artistIdFilter 
+            ? "Este artista aún no tiene álbumes registrados en el catálogo." 
             : "No hay álbumes registrados en el sistema. ¡Añade el primer disco con el botón superior!"
         } />
       ) : (
         <Grid container spacing={3}>
           {displayedAlbums.map((album) => (
             <Grid item xs={12} sm={6} md={4} key={album.id}>
-              <AlbumCard album={album} onDelete={handleDelete} canEdit={canEdit} />
+              {/* 4. Pasa la prop onEdit al mapear el Grid: */}
+              <AlbumCard album={album} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
             </Grid>
           ))}
         </Grid>
       )}
 
+      {/* Componente Modal de creación */}
       {canEdit && (
         <CreateAlbumModal
           open={openModal}
           onClose={() => setOpenModal(false)}
           onSuccess={handleAlbumCreated}
+        />
+      )}
+
+      {/* Agrega el modal de edición al final del JSX: */}
+      {canEdit && (
+        <EditAlbumModal
+          open={openEditModal}
+          onClose={() => {
+            setOpenEditModal(false);
+            setEditingAlbum(null);
+          }}
+          onSuccess={handleAlbumUpdated}
+          album={editingAlbum}
         />
       )}
     </Container>
