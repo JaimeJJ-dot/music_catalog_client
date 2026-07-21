@@ -11,22 +11,22 @@ const ArtistCard = ({ artist, onDelete, onEdit }) => {
   // Función blindada para resolver la ruta web real de la foto hacia el backend de Django
   const getValidImageSource = (photo) => {
     if (!photo) return fallbackPhoto;
-    
+
     // Si ya es un enlace web completo (http...) o una imagen en Base64 cruda, la usamos directo
     if (photo.startsWith('http://') || photo.startsWith('https://') || photo.startsWith('data:image')) {
       return photo;
     }
-    
+
     const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-    
+
     // Aseguramos que la ruta empiece con una diagonal '/'
     let cleanPath = photo.startsWith('/') ? photo : `/${photo}`;
-    
+
     // Si Django devolvió solo el nombre del archivo (ej: "/artist_photo_xxx.jpeg"), le anteponemos "/media"
     if (!cleanPath.startsWith('/media/') && !cleanPath.startsWith('/static/')) {
       cleanPath = `/media${cleanPath}`;
     }
-    
+
     return `${baseUrl}${cleanPath}`;
   };
 
@@ -53,7 +53,7 @@ const ArtistCard = ({ artist, onDelete, onEdit }) => {
           Género: {artist.genre || 'No especificado'}
         </Typography>
         <Typography variant="body2" sx={{ color: '#b3b3b3', mb: 2 }}>
-          {artist.biography ? `${artist.biography.substring(0, 80)}...` : 'Sin biografía registrada.'}
+          {artist.bio ? `${artist.bio.substring(0, 80)}...` : 'Sin biografía registrada.'}
         </Typography>
 
         {/* Contenedor de botones optimizado para el tema Vynlo */}
