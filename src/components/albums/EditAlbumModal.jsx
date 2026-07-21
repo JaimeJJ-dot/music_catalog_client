@@ -29,12 +29,15 @@ const EditAlbumModal = ({ open, onClose, onSuccess, album }) => {
                     console.error("Error cargando lista de artistas:", err);
                 }
 
-                // Frontera de microtarea para aislar la actualización de estados y cumplir con ESLint
                 await Promise.resolve();
                 if (isMounted && album) {
                     setTitle(album.title || '');
                     setArtistId(album.artist || '');
-                    setReleaseDate(album.release_date || '');
+                    
+                    // CORRECCIÓN DE FECHA: Aseguramos el formato YYYY-MM-DD para el input type="date"
+                    const formattedDate = album.release_date ? album.release_date.split('T')[0] : '';
+                    setReleaseDate(formattedDate);
+                    
                     setCover(album.cover || '');
                     setError(null);
                 }
@@ -53,18 +56,31 @@ const EditAlbumModal = ({ open, onClose, onSuccess, album }) => {
         setLoading(true);
         setError(null);
         try {
+            // CORRECCIÓN DE PAYLOAD: Estructuramos los datos con los tipos exactos que exige Django
             const payload = {
                 title,
-                artist: parseInt(artistId, 10), // Convertimos a entero para cumplir con la llave foránea de Django
-                release_date: releaseDate || null,
-                cover
+                artist: parseInt(artistId, 10),
+                // Si la fecha está vacía enviamos null para que DRF no rechace el formato
+                release_date: releaseDate ? releaseDate : null
             };
+
+            // CORRECCIÓN DE IMAGEN: Solo enviamos 'cover' si es un Base64 nuevo o si el usuario quitó la foto
+            if (cover && cover.startsWith('data:image')) {
+                payload.cover = cover;
+            } else if (!cover) {
+                payload.cover = null; // Para permitir borrar la portada si el modelo lo permite
+            }
+            // Si 'cover' es una URL web antigua (http://...), no la mandamos en el PUT; 
+            // así el backend conserva la foto existente sin intentar validar la URL como Base64.
+
             const response = await updateAlbum(album.id, payload);
-            onSuccess(response.data); // Notificamos a AlbumsPage para reemplazar el disco en la grilla
+            onSuccess(response.data);
             onClose();
         } catch (err) {
             console.error("Error al actualizar álbum:", err);
-            setError("No se pudo guardar el álbum modificado. Revisa tu conexión o sesión.");
+            // Si el backend devuelve un error específico, lo mostramos para facilitar el diagnóstico
+            const backendMsg = err.response?.data ? JSON.stringify(err.response.data) : null;
+            setError(backendMsg || "No se pudo guardar el álbum modificado. Revisa tu conexión o sesión.");
         } finally {
             setLoading(false);
         }
@@ -77,7 +93,7 @@ const EditAlbumModal = ({ open, onClose, onSuccess, album }) => {
             </DialogTitle>
             <form onSubmit={handleSubmit}>
                 <DialogContent dividers sx={{ backgroundColor: '#121212', color: '#ffffff' }}>
-                    {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                    {error && <Alert severity="error" sx={{ mb: 2, wordBreak: 'break-word' }}>{error}</Alert>}
 
                     <FormControl fullWidth margin="normal" required>
                         <InputLabel id="edit-artist-label" sx={{ color: '#b3b3b3' }}>Artista / Banda</InputLabel>
