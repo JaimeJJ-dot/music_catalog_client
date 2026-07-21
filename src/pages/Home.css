@@ -10,6 +10,10 @@
   padding-bottom: 2.5rem;
 }
 
+.home-section .MuiBox-root:has(.empty-state-icon) {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
 .home-greeting {
   color: #FFFFFF !important;
   font-weight: 800 !important;

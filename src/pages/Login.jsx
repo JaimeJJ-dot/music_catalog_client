@@ -38,7 +38,7 @@ const Login = () => {
                 <Box className="login-header">
                     <LibraryMusicIcon className="login-icon" sx={{ fontSize: 48 }} />
                     <Typography component="h1" variant="h5" className="login-title">
-                        Inicia sesión en SoundCatalog
+                        Inicia sesión en Vynlo
                     </Typography>
                     <Typography variant="body2" className="login-subtitle">
                         Accede con tu cuenta de Django para gestionar el catálogo
