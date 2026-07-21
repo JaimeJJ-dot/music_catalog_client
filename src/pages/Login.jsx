@@ -23,6 +23,7 @@ const Login = () => {
         try {
             const data = await loginWithOAuth(username, password, CLIENT_ID, CLIENT_SECRET);
             localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('username', username);
             navigate('/');
         } catch (err) {
             console.error("Error en login:", err);
