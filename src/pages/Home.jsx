@@ -3,7 +3,7 @@ import { Container, Typography, Box, Button, Grid } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { getArtists, deleteArtist } from '../services/artistService';
 import { getAlbums, deleteAlbum } from '../services/albumService';
-import { isLoggedIn } from '../utils/auth';
+import { isLoggedIn } from '../services/authService';
 import ArtistCard from '../components/artists/ArtistCard';
 import AlbumCard from '../components/albums/AlbumCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';

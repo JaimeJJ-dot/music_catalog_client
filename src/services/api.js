@@ -22,7 +22,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor de Respuestas: Manejo centralizado de errores
+// Interceptor de Respuestas: Manejo centralizado de errores sin expulsar al usuario
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -30,9 +30,12 @@ api.interceptors.response.use(
       const { status } = error.response;
 
       if (status === 401) {
-        // Token inválido o expirado: limpiar sesión y redirigir a login
+        // Token inválido o expirado: limpiamos la sesión silenciosamente
+        // NO redirigimos a '/login' para permitir que los visitantes públicos sigan navegando en modo lectura
         localStorage.removeItem('access_token');
-        window.location.href = '/login';
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('token');
+        localStorage.clear();
       } else if (status === 403) {
         console.error('No tienes permisos para realizar esta acción.');
       } else if (status === 404) {
