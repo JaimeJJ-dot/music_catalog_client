@@ -1,5 +1,6 @@
 // src/components/common/Logo.jsx
 import { Box, Typography } from '@mui/material';
+import './Logo.css';
 
 const VynloIcon = ({ size = 32 }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
@@ -14,17 +15,13 @@ const VynloIcon = ({ size = 32 }) => (
 
 const Logo = ({ size = 32, showText = true, textVariant = 'h6' }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Box className="logo-container">
       <VynloIcon size={size} />
       {showText && (
         <Typography
           variant={textVariant}
           component="span"
-          sx={{
-            fontWeight: 900,
-            letterSpacing: '-0.5px',
-            color: '#FFFFFF',
-          }}
+          className="logo-text"
         >
           Vynlo
         </Typography>

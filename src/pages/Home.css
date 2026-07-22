@@ -1,3 +1,5 @@
+/* src/pages/Home.css */
+
 .home-page {
   background-color: #121212;
   min-height: 100vh;
@@ -14,6 +16,28 @@
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
 }
+
+.home-greeting-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.home-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1DB954, #1a8a3f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .home-greeting {
   color: #FFFFFF !important;
   font-weight: 800 !important;
@@ -22,9 +46,9 @@
 }
 
 .home-subgreeting {
-  color: #D0D0D0 !important;
-  margin-top: 0.5rem !important;
-  font-size: 1rem !important;
+  color: #B3B3B3 !important;
+  margin-top: 0.35rem !important;
+  font-size: 0.95rem !important;
 }
 
 .home-content {
@@ -60,54 +84,6 @@
 .home-see-all:hover {
   color: #FFFFFF !important;
   text-decoration: underline;
-}
-
-.home-greeting-row {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.home-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1DB954, #1a8a3f);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #FFFFFF;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.home-greeting-row {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.home-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1DB954, #1a8a3f);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #FFFFFF;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.home-subgreeting {
-  color: #B3B3B3 !important;
-  margin-top: 0.35rem !important;
-  font-size: 0.95rem !important;
 }
 
 /* Fila de scroll horizontal, estilo "shelf" de Spotify */

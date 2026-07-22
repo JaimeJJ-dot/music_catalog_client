@@ -44,7 +44,7 @@ const Home = () => {
   const navigate = useNavigate();
   const canEdit = isLoggedIn();
   const username = localStorage.getItem('username');
-  
+
   // Estados para modales de edición
   const [editingArtist, setEditingArtist] = useState(null);
   const [openEditArtist, setOpenEditArtist] = useState(false);
@@ -222,7 +222,7 @@ const Home = () => {
                   <Link to={item.to} className="quick-access-card">
                     <Box
                       className="quick-access-image"
-                      sx={{
+                      style={{
                         backgroundImage: `url(${getValidImageUrl(item.image)})`,
                       }}
                     />
@@ -258,8 +258,8 @@ const Home = () => {
               <Box className="home-scroll-row">
                 {artists.slice(0, 6).map((artist) => (
                   <Box className="home-scroll-item" key={artist.id}>
-                    <ArtistCard 
-                      artist={artist} 
+                    <ArtistCard
+                      artist={artist}
                       canEdit={canEdit}
                       onEdit={handleEditArtistClick}
                       onDelete={handleDeleteArtistClick}
@@ -295,8 +295,8 @@ const Home = () => {
               <Box className="home-scroll-row">
                 {albums.slice(0, 6).map((album) => (
                   <Box className="home-scroll-item" key={album.id}>
-                    <AlbumCard 
-                      album={album} 
+                    <AlbumCard
+                      album={album}
                       canEdit={canEdit}
                       onEdit={handleEditAlbumClick}
                       onDelete={handleDeleteAlbumClick}

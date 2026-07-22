@@ -1,18 +1,22 @@
-/* AlbumCard.css / ArtistCard.css — mismo patrón para ambos */
+/* src/components/albums/AlbumCard.css */
+
+/* ESTRUCTURA Y FONDO (Conservando el diseño original) */
 .album-card,
 .artist-card {
   display: flex;
   flex-direction: column;
   height: 100%;
   background-color: #181818 !important;
+  border: 1px solid #282828 !important;
   border-radius: 8px !important;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   overflow: hidden;
 }
 
 .album-card:hover,
 .artist-card:hover {
   background-color: #282828 !important;
+  border-color: #383838 !important;
   transform: translateY(-4px);
 }
 
@@ -23,12 +27,57 @@
   flex-grow: 1;
   justify-content: space-between;
   color: #FFFFFF;
+  padding: 1rem !important;
 }
 
 .album-actions,
 .artist-actions {
   display: flex;
   justify-content: flex-end;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+/* TIPOGRAFÍA DEL ÁLBUM */
+.album-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.album-artist {
+  color: #1db954 !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.album-release {
+  color: #b3b3b3 !important;
+  margin-bottom: 1rem !important;
+}
+
+.album-release strong {
+  color: #ffffff !important;
+}
+
+/* BOTONES DE ACCIÓN (Estética Vynlo/Spotify) */
+.btn-edit {
+  color: #ffffff !important;
+  border-color: #535353 !important;
+  border-radius: 20px !important;
+  text-transform: none !important;
+}
+
+.btn-edit:hover {
+  border-color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.btn-delete {
+  border-radius: 20px !important;
+  text-transform: none !important;
 }

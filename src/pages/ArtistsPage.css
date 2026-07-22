@@ -1,18 +1,54 @@
-/* AlbumsPage.css / ArtistsPage.css — mismo patrón */
-.albums-page-container,
+/* src/pages/ArtistsPage.css */
+
 .artists-page-container {
   padding-top: 2rem;
   padding-bottom: 4rem;
-  background-color: #121212;
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
+  background-color: var(--background-color, #121212);
+  color: var(--text-primary, #ffffff);
 }
 
-.albums-page-header,
 .artists-page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.artists-page-header h1 {
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+/* Personalización del botón de acción en el header */
+.artists-page-header .MuiButton-containedPrimary {
+  background-color: #1db954;
+  color: #000000;
+  font-weight: 700;
+  text-transform: none;
+  border-radius: 500px;
+  padding: 8px 20px;
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+.artists-page-header .MuiButton-containedPrimary:hover {
+  background-color: #1ed760;
+  transform: scale(1.04);
+  box-shadow: 0 6px 16px rgba(29, 185, 84, 0.5);
+}
+
+/* Adaptabilidad para pantallas móviles */
+@media (max-width: 600px) {
+  .artists-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .artists-page-header .MuiButton-root {
+    align-self: stretch;
+  }
 }

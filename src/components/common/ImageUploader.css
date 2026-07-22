@@ -1,0 +1,54 @@
+/* src/components/common/ImageUploader.css */
+
+.image-uploader-container {
+    border: 1px dashed #535353 !important;
+    padding: 1rem !important;
+    border-radius: 8px !important;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.image-uploader-label {
+    color: #b3b3b3 !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.image-preview-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.image-preview-avatar {
+    width: 120px !important;
+    height: 120px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid #282828 !important;
+}
+
+.btn-remove-photo {
+    color: #ff5555 !important;
+    border-color: #ff5555 !important;
+    border-radius: 20px !important;
+    text-transform: none !important;
+}
+
+.btn-remove-photo:hover {
+    background-color: rgba(255, 85, 85, 0.1) !important;
+    border-color: #ff7777 !important;
+}
+
+.btn-select-file {
+    background-color: #282828 !important;
+    color: #ffffff !important;
+    font-weight: bold !important;
+    border-radius: 20px !important;
+    text-transform: none !important;
+}
+
+.btn-select-file:hover {
+    background-color: #383838 !important;
+}

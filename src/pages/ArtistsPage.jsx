@@ -84,7 +84,6 @@ const ArtistsPage = () => {
     if (window.confirm("¿Estás seguro de eliminar este artista?")) {
       try {
         await deleteArtist(id);
-        // Corrección aquí usando (prev) => ...
         setArtists((prev) => prev.filter((a) => a.id !== id));
       } catch (err) {
         console.error("Error eliminando registro:", err);
@@ -124,7 +123,8 @@ const ArtistsPage = () => {
       ) : (
         <Grid container spacing={3}>
           {artists.map((artist) => (
-            <Grid item xs={12} sm={6} md={4} key={artist.id}>
+            /* Homologado a md={3} lg={2.4} para mantener simetría exacta con los álbumes */
+            <Grid item xs={12} sm={6} md={3} lg={2.4} key={artist.id}>
               <ArtistCard artist={artist} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
             </Grid>
           ))}

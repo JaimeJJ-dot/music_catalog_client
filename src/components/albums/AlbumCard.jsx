@@ -31,7 +31,7 @@ const AlbumCard = ({ album, onDelete, onEdit, canEdit }) => {
   const imageSource = getValidImageSource(album.cover);
 
   return (
-    <Card className="album-card" elevation={2} sx={{ backgroundColor: '#181818', color: '#ffffff', border: '1px solid #282828' }}>
+    <Card className="album-card" elevation={2}>
       <CardMedia
         component="img"
         height="220"
@@ -45,46 +45,41 @@ const AlbumCard = ({ album, onDelete, onEdit, canEdit }) => {
         }}
       />
       <CardContent className="album-content">
-        <Typography variant="h6" component="div" fontWeight="bold" sx={{ color: '#ffffff' }}>
+        {/* Clases modulares en lugar de sx */}
+        <Typography variant="h6" component="div" className="album-title">
           {album.title}
         </Typography>
-        <Typography variant="subtitle1" sx={{ color: '#1db954', fontWeight: '600', mb: 1 }}>
+        <Typography variant="subtitle1" className="album-artist">
           {album.artist_name || 'Artista Desconocido'}
         </Typography>
-        <Typography variant="body2" sx={{ color: '#b3b3b3', mb: 2 }}>
-          Lanzamiento: <strong style={{ color: '#ffffff' }}>{album.release_date || 'No registrado'}</strong>
+        <Typography variant="body2" className="album-release">
+          Lanzamiento: <strong>{album.release_date || 'No registrado'}</strong>
         </Typography>
 
-        {/* Agrupamos ambos botones ordenadamente y los protegemos con canEdit si es necesario */}
-        <Box className="album-actions" sx={{ borderTop: '1px solid #282828', pt: 1, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+        {/* Agrupación de controles operada por CSS */}
+        <Box className="album-actions">
           {canEdit && (
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<EditIcon />}
-            onClick={() => onEdit(album)}
-            sx={{
-              color: '#ffffff',
-              borderColor: '#535353',
-              borderRadius: '20px',
-              textTransform: 'none',
-              '&:hover': { borderColor: '#ffffff', backgroundColor: 'rgba(255,255,255,0.05)' }
-            }}
-          >
-            Editar
-          </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => onEdit(album)}
+              className="btn-edit"
+            >
+              Editar
+            </Button>
           )}
           {canEdit && (
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            startIcon={<DeleteIcon />}
-            onClick={() => onDelete(album.id)}
-            sx={{ borderRadius: '20px', textTransform: 'none' }}
-          >
-            Eliminar
-          </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={() => onDelete(album.id)}
+              className="btn-delete"
+            >
+              Eliminar
+            </Button>
           )}
         </Box>
       </CardContent>

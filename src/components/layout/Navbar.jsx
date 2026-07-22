@@ -10,22 +10,18 @@ const Navbar = () => {
   const isLoggedIn = checkAuth();
 
   const handleLogout = () => {
-    // Limpiamos absolutamente todas las llaves de la sesión en el navegador
     localStorage.removeItem('token');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('username');
-    localStorage.clear(); // Por seguridad, limpia cualquier rastro residual
-    // Usamos window.location.href en vez de navigate()
-    // Esto obliga al navegador a limpiar toda la memoria caché de React, 
-    // recalcular el isLoggedIn() a false en todos los componentes y mandarte al inicio limpio.
+    localStorage.clear();
     window.location.href = '/';
   };
 
   return (
     <AppBar position="static" className="navbar-root">
       <Toolbar>
-        <Box component={Link} to="/" sx={{ flexGrow: 1, textDecoration: 'none' }}>
+        <Box component={Link} to="/" className="navbar-logo-link">
           <Logo />
         </Box>
         <Box className="navbar-links">
@@ -46,10 +42,8 @@ const Navbar = () => {
           {isLoggedIn ? (
             <Button
               variant="contained"
-              color="primary"
               className="navbar-cta"
               onClick={handleLogout}
-              sx={{ ml: 2 }}
             >
               Cerrar sesión
             </Button>
@@ -58,9 +52,7 @@ const Navbar = () => {
               component={Link}
               to="/login"
               variant="contained"
-              color="primary"
               className="navbar-cta"
-              sx={{ ml: 2 }}
             >
               Iniciar sesión
             </Button>

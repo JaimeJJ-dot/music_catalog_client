@@ -1,18 +1,12 @@
+// src/components/common/LoadingSpinner.jsx
 import { Box, CircularProgress, Typography } from '@mui/material';
+import './LoadingSpinner.css';
 
 const LoadingSpinner = ({ message = 'Cargando...' }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: 6,
-      }}
-    >
-      <CircularProgress />
-      <Typography variant="body2" sx={{ mt: 2 }} color="text.secondary">
+    <Box className="loading-spinner-container">
+      <CircularProgress className="loading-spinner-circle" />
+      <Typography variant="body2" className="loading-spinner-text">
         {message}
       </Typography>
     </Box>
