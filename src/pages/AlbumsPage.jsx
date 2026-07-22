@@ -23,12 +23,10 @@ const AlbumsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const artistIdFilter = searchParams.get('artistId');
 
-  // Uso de (prev) para evitar cierres obsoletos (stale closures)
   const handleAlbumCreated = (newAlbum) => {
     setAlbums((prev) => [newAlbum, ...prev]);
   };
 
-  // Funciones de manejo de edición:
   const handleEditClick = (album) => {
     setEditingAlbum(album);
     setOpenEditModal(true);
@@ -38,7 +36,6 @@ const AlbumsPage = () => {
     setAlbums((prev) => prev.map((alb) => (alb.id === updatedAlbum.id ? updatedAlbum : alb)));
   };
 
-  // Consulta aislada dentro del hook con patrón de limpieza (Effect Cleanup Pattern)
   useEffect(() => {
     let isMounted = true;
 
@@ -68,7 +65,6 @@ const AlbumsPage = () => {
     };
   }, []);
 
-  // Estandarizado a async/await
   const handleRetry = async () => {
     setLoading(true);
     setError(null);
@@ -87,7 +83,6 @@ const AlbumsPage = () => {
     if (window.confirm("¿Estás seguro de eliminar este álbum del catálogo?")) {
       try {
         await deleteAlbum(id);
-        // 1. Uso de (prev) al filtrar álbumes eliminados
         setAlbums((prev) => prev.filter((a) => a.id !== id));
       } catch (err) {
         console.error("Error al eliminar álbum:", err);
@@ -111,7 +106,7 @@ const AlbumsPage = () => {
   return (
     <Container maxWidth="lg" className="albums-page-container">
       <Box className="albums-page-header">
-        <Typography variant="h4" component="h1" fontWeight="bold" sx={{ color: '#ffffff' }}>
+        <Typography variant="h4" component="h1" fontWeight="bold" className="albums-page-title">
           Discografía y Álbumes
         </Typography>
         {canEdit && (
@@ -119,14 +114,7 @@ const AlbumsPage = () => {
             variant="contained" 
             startIcon={<AddOutlineIcon />} 
             onClick={() => setOpenModal(true)}
-            sx={{ 
-              backgroundColor: '#1db954', 
-              color: '#000000', 
-              fontWeight: 'bold',
-              borderRadius: '20px',
-              textTransform: 'none',
-              '&:hover': { backgroundColor: '#1ed760' }
-            }}
+            className="btn-new-album"
           >
             Nuevo Álbum
           </Button>
@@ -134,19 +122,8 @@ const AlbumsPage = () => {
       </Box>
 
       {artistIdFilter && (
-        <Box sx={{ 
-          mb: 3, 
-          p: 2, 
-          backgroundColor: '#181818', 
-          border: '1px solid #282828', 
-          borderRadius: '10px', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 2
-        }}>
-          <Typography variant="body1" sx={{ color: '#1db954', fontWeight: '500' }}>
+        <Box className="filter-banner">
+          <Typography variant="body1" className="filter-banner-text">
             ⚡ Mostrando únicamente la discografía del artista seleccionado
           </Typography>
           <Button 
@@ -154,13 +131,7 @@ const AlbumsPage = () => {
             size="small" 
             startIcon={<FilterOffIcon />}
             onClick={() => setSearchParams({})}
-            sx={{ 
-              color: '#ffffff', 
-              borderColor: '#535353', 
-              borderRadius: '20px',
-              textTransform: 'none',
-              '&:hover': { borderColor: '#ffffff', backgroundColor: 'rgba(255,255,255,0.05)' }
-            }}
+            className="btn-clear-filter"
           >
             Ver todos los álbumes
           </Button>
@@ -176,14 +147,13 @@ const AlbumsPage = () => {
       ) : (
         <Grid container spacing={3}>
           {displayedAlbums.map((album) => (
-            <Grid item xs={12} sm={6} md={4} key={album.id}>
+            <Grid item xs={12} sm={6} md={3} lg={2.4} key={album.id}>
               <AlbumCard album={album} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
             </Grid>
           ))}
         </Grid>
       )}
 
-      {/* Componente Modal de creación */}
       {canEdit && (
         <CreateAlbumModal
           open={openModal}
@@ -192,7 +162,6 @@ const AlbumsPage = () => {
         />
       )}
 
-      {/* Componente Modal de edición */}
       {canEdit && (
         <EditAlbumModal
           open={openEditModal}

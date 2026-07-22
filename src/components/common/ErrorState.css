@@ -1,0 +1,34 @@
+/* src/components/common/ErrorState.css */
+
+.error-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    text-align: center;
+}
+
+.error-state-icon {
+    font-size: 3rem !important;
+    margin-bottom: 0.5rem !important;
+    color: #ff5555 !important;
+}
+
+.error-state-text {
+    color: #ff5555 !important;
+    margin-bottom: 1rem !important;
+}
+
+.btn-retry {
+    border-color: #ff5555 !important;
+    color: #ff5555 !important;
+    border-radius: 20px !important;
+    text-transform: none !important;
+}
+
+.btn-retry:hover {
+    background-color: rgba(255, 85, 85, 0.1) !important;
+    border-color: #ff7777 !important;
+}

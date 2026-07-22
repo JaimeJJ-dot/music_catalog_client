@@ -1,19 +1,13 @@
+// src/components/common/EmptyState.jsx
 import { Box, Typography } from '@mui/material';
 import InboxIcon from '@mui/icons-material/Inbox';
+import './EmptyState.css';
 
 const EmptyState = ({ message = 'No hay registros todavía.' }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: 6,
-      }}
-    >
-      <InboxIcon sx={{ fontSize: 48, mb: 1, color: 'text.disabled' }} />
-      <Typography variant="body1" color="text.secondary">
+    <Box className="empty-state-container">
+      <InboxIcon className="empty-state-icon" />
+      <Typography variant="body1" className="empty-state-text">
         {message}
       </Typography>
     </Box>

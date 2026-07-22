@@ -1,0 +1,14 @@
+/* src/components/common/Logo.css */
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    user-select: none;
+}
+
+.logo-text {
+    font-weight: 900 !important;
+    letter-spacing: -0.5px !important;
+    color: #ffffff !important;
+}

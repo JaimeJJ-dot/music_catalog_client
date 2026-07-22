@@ -1,18 +1,87 @@
-/* AlbumsPage.css / ArtistsPage.css — mismo patrón */
-.albums-page-container,
-.artists-page-container {
+/* src/pages/AlbumsPage.css */
+
+.albums-page-container {
   padding-top: 2rem;
   padding-bottom: 4rem;
-  background-color: #121212;
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
+  background-color: var(--background-color, #121212);
+  color: var(--text-primary, #ffffff);
 }
 
-.albums-page-header,
-.artists-page-header {
+.albums-page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.albums-page-title {
+  color: #ffffff !important;
+  letter-spacing: -0.5px;
+}
+
+/* Botón: Nuevo Álbum */
+.btn-new-album {
+  background-color: #1db954 !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+  text-transform: none !important;
+  padding: 8px 20px !important;
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.btn-new-album:hover {
+  background-color: #1ed760 !important;
+  transform: scale(1.04);
+  box-shadow: 0 6px 16px rgba(29, 185, 84, 0.5) !important;
+}
+
+/* Banner de filtro por artista */
+.filter-banner {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #181818;
+  border: 1px solid #282828;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-banner-text {
+  color: #1db954 !important;
+  font-weight: 500 !important;
+}
+
+/* Botón: Ver todos los álbumes (limpiar filtro) */
+.btn-clear-filter {
+  color: #ffffff !important;
+  border-color: #535353 !important;
+  border-radius: 20px !important;
+  text-transform: none !important;
+}
+
+.btn-clear-filter:hover {
+  border-color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Adaptabilidad para móviles */
+@media (max-width: 600px) {
+  .albums-page-header,
+  .filter-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .btn-new-album,
+  .btn-clear-filter {
+    align-self: stretch;
+  }
 }

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Alert } from '@mui/material';
 import { updateArtist } from '../../services/artistService';
 import ImageUploader from '../common/ImageUploader';
+import './EditArtistModal.css';
 
 const EditArtistModal = ({ open, onClose, onSuccess, artist }) => {
     const [name, setName] = useState('');
@@ -53,38 +54,32 @@ const EditArtistModal = ({ open, onClose, onSuccess, artist }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle fontWeight="bold" sx={{ backgroundColor: '#181818', color: '#ffffff' }}>
+            <DialogTitle className="edit-artist-title">
                 Editar Artista: {artist?.name}
             </DialogTitle>
             <form onSubmit={handleSubmit}>
-                <DialogContent dividers sx={{ backgroundColor: '#121212', color: '#ffffff' }}>
-                    {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                <DialogContent dividers className="edit-artist-content">
+                    {error && <Alert severity="error" className="edit-artist-alert">{error}</Alert>}
                     <TextField
                         label="Nombre del Artista *"
                         fullWidth margin="normal" required
                         value={name} onChange={(e) => setName(e.target.value)}
-                        InputLabelProps={{ style: { color: '#b3b3b3' } }}
-                        InputProps={{ style: { color: '#ffffff', borderColor: '#282828' } }}
                     />
                     <TextField
                         label="Género Musical"
                         fullWidth margin="normal"
                         value={genre} onChange={(e) => setGenre(e.target.value)}
-                        InputLabelProps={{ style: { color: '#b3b3b3' } }}
-                        InputProps={{ style: { color: '#ffffff' } }}
                     />
                     <TextField
                         label="Biografía"
                         fullWidth multiline rows={3} margin="normal"
                         value={bio} onChange={(e) => setBio(e.target.value)}
-                        InputLabelProps={{ style: { color: '#b3b3b3' } }}
-                        InputProps={{ style: { color: '#ffffff' } }}
                     />
                     <ImageUploader label="Cambiar Foto (Base64)" value={photo} onChange={setPhoto} />
                 </DialogContent>
-                <DialogActions sx={{ p: 2, backgroundColor: '#181818' }}>
-                    <Button onClick={onClose} sx={{ color: '#b3b3b3', textTransform: 'none' }}>Cancelar</Button>
-                    <Button type="submit" variant="contained" disabled={loading} sx={{ backgroundColor: '#1db954', color: '#000', fontWeight: 'bold', borderRadius: '20px', '&:hover': { backgroundColor: '#1ed760' } }}>
+                <DialogActions className="edit-artist-actions">
+                    <Button onClick={onClose} className="btn-cancel">Cancelar</Button>
+                    <Button type="submit" variant="contained" disabled={loading} className="btn-save">
                         {loading ? "Guardando..." : "Guardar Cambios"}
                     </Button>
                 </DialogActions>

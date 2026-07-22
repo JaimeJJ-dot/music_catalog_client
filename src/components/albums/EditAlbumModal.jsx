@@ -4,6 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, M
 import { updateAlbum } from '../../services/albumService';
 import { getArtists } from '../../services/artistService';
 import ImageUploader from '../common/ImageUploader';
+import './EditAlbumModal.css';
 
 const EditAlbumModal = ({ open, onClose, onSuccess, album }) => {
     const [title, setTitle] = useState('');
@@ -70,15 +71,12 @@ const EditAlbumModal = ({ open, onClose, onSuccess, album }) => {
             } else if (!cover) {
                 payload.cover = null; // Para permitir borrar la portada si el modelo lo permite
             }
-            // Si 'cover' es una URL web antigua (http://...), no la mandamos en el PUT; 
-            // así el backend conserva la foto existente sin intentar validar la URL como Base64.
 
             const response = await updateAlbum(album.id, payload);
             onSuccess(response.data);
             onClose();
         } catch (err) {
             console.error("Error al actualizar álbum:", err);
-            // Si el backend devuelve un error específico, lo mostramos para facilitar el diagnóstico
             const backendMsg = err.response?.data ? JSON.stringify(err.response.data) : null;
             setError(backendMsg || "No se pudo guardar el álbum modificado. Revisa tu conexión o sesión.");
         } finally {
@@ -88,21 +86,20 @@ const EditAlbumModal = ({ open, onClose, onSuccess, album }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle fontWeight="bold" sx={{ backgroundColor: '#181818', color: '#ffffff' }}>
+            <DialogTitle className="edit-modal-title">
                 Editar Álbum: {album?.title}
             </DialogTitle>
             <form onSubmit={handleSubmit}>
-                <DialogContent dividers sx={{ backgroundColor: '#121212', color: '#ffffff' }}>
-                    {error && <Alert severity="error" sx={{ mb: 2, wordBreak: 'break-word' }}>{error}</Alert>}
+                <DialogContent dividers className="edit-modal-content">
+                    {error && <Alert severity="error" className="edit-modal-alert">{error}</Alert>}
 
                     <FormControl fullWidth margin="normal" required>
-                        <InputLabel id="edit-artist-label" sx={{ color: '#b3b3b3' }}>Artista / Banda</InputLabel>
+                        <InputLabel id="edit-artist-label">Artista / Banda</InputLabel>
                         <Select
                             labelId="edit-artist-label"
                             value={artistId}
                             label="Artista / Banda *"
                             onChange={(e) => setArtistId(e.target.value)}
-                            sx={{ color: '#ffffff', '.MuiOutlinedInput-notchedOutline': { borderColor: '#282828' } }}
                         >
                             {artistsList.map((art) => (
                                 <MenuItem key={art.id} value={art.id}>{art.name}</MenuItem>
@@ -114,22 +111,19 @@ const EditAlbumModal = ({ open, onClose, onSuccess, album }) => {
                         label="Título del Álbum *"
                         fullWidth margin="normal" required
                         value={title} onChange={(e) => setTitle(e.target.value)}
-                        InputLabelProps={{ style: { color: '#b3b3b3' } }}
-                        InputProps={{ style: { color: '#ffffff', borderColor: '#282828' } }}
                     />
                     <TextField
                         label="Fecha de Lanzamiento"
                         type="date"
                         fullWidth margin="normal"
-                        InputLabelProps={{ shrink: true, style: { color: '#b3b3b3' } }}
-                        InputProps={{ style: { color: '#ffffff' } }}
+                        InputLabelProps={{ shrink: true }}
                         value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)}
                     />
                     <ImageUploader label="Cambiar Portada (Base64)" value={cover} onChange={setCover} />
                 </DialogContent>
-                <DialogActions sx={{ p: 2, backgroundColor: '#181818' }}>
-                    <Button onClick={onClose} sx={{ color: '#b3b3b3', textTransform: 'none' }}>Cancelar</Button>
-                    <Button type="submit" variant="contained" disabled={loading} sx={{ backgroundColor: '#1db954', color: '#000', fontWeight: 'bold', borderRadius: '20px', '&:hover': { backgroundColor: '#1ed760' } }}>
+                <DialogActions className="edit-modal-actions">
+                    <Button onClick={onClose} className="btn-cancel">Cancelar</Button>
+                    <Button type="submit" variant="contained" disabled={loading} className="btn-save">
                         {loading ? "Guardando..." : "Guardar Cambios"}
                     </Button>
                 </DialogActions>

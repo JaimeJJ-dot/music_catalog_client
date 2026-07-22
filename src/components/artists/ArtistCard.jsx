@@ -12,17 +12,13 @@ const ArtistCard = ({ artist, onDelete, onEdit, canEdit }) => {
   const getValidImageSource = (photo) => {
     if (!photo) return fallbackPhoto;
 
-    // Si ya es un enlace web completo (http...) o una imagen en Base64 cruda, la usamos directo
     if (photo.startsWith('http://') || photo.startsWith('https://') || photo.startsWith('data:image')) {
       return photo;
     }
 
     const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-
-    // Aseguramos que la ruta empiece con una diagonal '/'
     let cleanPath = photo.startsWith('/') ? photo : `/${photo}`;
 
-    // Si Django devolvió solo el nombre del archivo (ej: "/artist_photo_xxx.jpeg"), le anteponemos "/media"
     if (!cleanPath.startsWith('/media/') && !cleanPath.startsWith('/static/')) {
       cleanPath = `/media${cleanPath}`;
     }
@@ -46,64 +42,52 @@ const ArtistCard = ({ artist, onDelete, onEdit, canEdit }) => {
         }}
       />
       <CardContent className="artist-content">
-        <Typography variant="h6" component="div" fontWeight="bold" sx={{ color: '#ffffff' }}>
+        {/* Usamos clases en lugar de sx para tipografía y colores */}
+        <Typography variant="h6" component="div" className="artist-name">
           {artist.name}
         </Typography>
-        <Typography variant="subtitle2" sx={{ color: '#1db954', fontWeight: '600', mb: 1 }}>
+        <Typography variant="subtitle2" className="artist-genre">
           Género: {artist.genre || 'No especificado'}
         </Typography>
-        <Typography variant="body2" sx={{ color: '#b3b3b3', mb: 2 }}>
+        <Typography variant="body2" className="artist-bio">
           {artist.bio ? `${artist.bio.substring(0, 80)}...` : 'Sin biografía registrada.'}
         </Typography>
 
-        {/* Contenedor de botones optimizado para el tema Vynlo */}
-        <Box className="artist-actions" sx={{ display: 'flex', gap: 1, justifyContent: 'space-between', mt: 'auto', pt: 2, borderTop: '1px solid #282828', flexWrap: 'wrap' }}>
+        {/* Contenedor de botones manejado 100% por CSS */}
+        <Box className="artist-actions">
           <Button
             variant="contained"
             size="small"
             startIcon={<AlbumIcon />}
             onClick={() => navigate(`/albums?artistId=${artist.id}`)}
-            sx={{
-              backgroundColor: '#1db954',
-              color: '#000000',
-              fontWeight: 'bold',
-              borderRadius: '20px',
-              textTransform: 'none',
-              '&:hover': { backgroundColor: '#1ed760' }
-            }}
+            className="btn-discography"
           >
             Ver discografía
           </Button>
           
           {canEdit && (
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<EditIcon />}
-            onClick={() => onEdit(artist)}
-            sx={{
-              color: '#ffffff',
-              borderColor: '#535353',
-              borderRadius: '20px',
-              textTransform: 'none',
-              '&:hover': { borderColor: '#ffffff', backgroundColor: 'rgba(255,255,255,0.05)' }
-            }}
-          >
-            Editar
-          </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => onEdit(artist)}
+              className="btn-edit"
+            >
+              Editar
+            </Button>
           )}
 
           {canEdit && (
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            startIcon={<DeleteIcon />}
-            onClick={() => onDelete(artist.id)}
-            sx={{ borderRadius: '20px', textTransform: 'none' }}
-          >
-            Eliminar
-          </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={() => onDelete(artist.id)}
+              className="btn-delete"
+            >
+              Eliminar
+            </Button>
           )}
         </Box>
       </CardContent>

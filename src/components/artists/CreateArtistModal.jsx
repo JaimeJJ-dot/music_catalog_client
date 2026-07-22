@@ -1,7 +1,9 @@
+// src/components/artists/CreateArtistModal.jsx
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Alert } from '@mui/material';
 import { createArtist } from '../../services/artistService';
 import ImageUploader from '../common/ImageUploader';
 import { useState } from 'react';
+import './CreateArtistModal.css';
 
 const CreateArtistModal = ({ open, onClose, onSuccess }) => {
     const [name, setName] = useState('');
@@ -19,12 +21,12 @@ const CreateArtistModal = ({ open, onClose, onSuccess }) => {
         try {
             const payload = {
                 name,
-                genre: genre || null, // Enviar null si no se especifica género
-                bio: bio || null, // Enviar null si no se especifica biografía
-                photo // String Base64 generado por ImageUploader
+                genre: genre || null,
+                bio: bio || null,
+                photo
             };
             const response = await createArtist(payload);
-            onSuccess(response.data); // Notificamos a ArtistsPage para actualizar la lista en RAM
+            onSuccess(response.data);
             handleClose();
         } catch (err) {
             console.error("Error creando artista:", err);
@@ -45,10 +47,10 @@ const CreateArtistModal = ({ open, onClose, onSuccess }) => {
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle fontWeight="bold">Registrar Nuevo Artista</DialogTitle>
+            <DialogTitle className="create-artist-title">Registrar Nuevo Artista</DialogTitle>
             <form onSubmit={handleSubmit}>
-                <DialogContent dividers>
-                    {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                <DialogContent dividers className="create-artist-content">
+                    {error && <Alert severity="error" className="create-artist-alert">{error}</Alert>}
                     <TextField
                         label="Nombre del Artista *"
                         fullWidth
@@ -76,9 +78,9 @@ const CreateArtistModal = ({ open, onClose, onSuccess }) => {
                     />
                     <ImageUploader label="Foto del Artista (Base64)" value={photo} onChange={setPhoto} />
                 </DialogContent>
-                <DialogActions sx={{ p: 2 }}>
-                    <Button onClick={handleClose} color="inherit">Cancelar</Button>
-                    <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                <DialogActions className="create-artist-actions">
+                    <Button onClick={handleClose} className="btn-cancel">Cancelar</Button>
+                    <Button type="submit" variant="contained" disabled={loading} className="btn-create">
                         {loading ? "Guardando..." : "Guardar Artista"}
                     </Button>
                 </DialogActions>

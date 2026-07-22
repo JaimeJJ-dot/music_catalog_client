@@ -1,4 +1,6 @@
-/* AlbumCard.css / ArtistCard.css — mismo patrón para ambos */
+/* src/components/artists/ArtistCard.css */
+
+/*  ESTRUCTURA Y FONDO */
 .album-card,
 .artist-card {
   display: flex;
@@ -23,12 +25,67 @@
   flex-grow: 1;
   justify-content: space-between;
   color: #FFFFFF;
+  padding: 1rem !important;
 }
 
 .album-actions,
 .artist-actions {
   display: flex;
-  justify-content: flex-end;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+/* TIPOGRAFÍA (Clases migradas desde el JSX) */
+.artist-name {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.artist-genre {
+  color: #1db954 !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.artist-bio {
+  color: #b3b3b3 !important;
+  margin-bottom: 1rem !important;
+}
+
+/* 3. BOTONES (Estilo píldora Vynlo/Spotify migrado desde el JSX) */
+.btn-discography {
+  background-color: #1db954 !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+  text-transform: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-discography:hover {
+  background-color: #1ed760 !important;
+  transform: scale(1.02);
+}
+
+.btn-edit {
+  color: #ffffff !important;
+  border-color: #535353 !important;
+  border-radius: 20px !important;
+  text-transform: none !important;
+}
+
+.btn-edit:hover {
+  border-color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.btn-delete {
+  border-radius: 20px !important;
+  text-transform: none !important;
 }

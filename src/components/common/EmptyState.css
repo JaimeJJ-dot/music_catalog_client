@@ -1,0 +1,21 @@
+/* src/components/common/EmptyState.css */
+
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    text-align: center;
+}
+
+.empty-state-icon {
+    font-size: 3rem !important;
+    margin-bottom: 0.5rem !important;
+    color: #535353 !important;
+}
+
+.empty-state-text {
+    color: #b3b3b3 !important;
+}

@@ -1,8 +1,10 @@
+/* src/pages/Login.css */
+
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 85vh;
+    min-height: calc(100vh - 64px);
     padding: 1rem;
     background-color: #121212;
 }
@@ -14,6 +16,7 @@
     border-radius: 12px;
     background-color: #181818 !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
 }
 
 .login-header {
@@ -25,23 +28,29 @@
     text-align: center;
 }
 
+/* Reemplazo del sx={{ fontSize: 48 }} */
 .login-icon {
-    color: #1DB954;
+    color: #1DB954 !important;
+    font-size: 48px !important;
     margin-bottom: 0.5rem;
 }
 
 .login-title {
     color: #FFFFFF !important;
     font-weight: 700 !important;
+    letter-spacing: -0.5px;
 }
 
 .login-subtitle {
     color: #B3B3B3 !important;
 }
 
+/* Reemplazo del sx={{ mb: 2 }} en la alerta */
 .login-alert {
     background-color: rgba(241, 94, 108, 0.15) !important;
     color: #F15E6C !important;
+    margin-bottom: 1rem !important;
+    word-break: break-word;
 }
 
 /* Inputs estilo Spotify: fondo gris oscuro, borde que se pone verde al enfocar */
@@ -74,7 +83,22 @@
     color: #FFFFFF;
 }
 
+/* Reemplazo del sx={{ mt: 3, mb: 2, py: 1.5 }} + Botón pildora verde Spotify */
 .login-button {
+    background-color: #1DB954 !important;
+    color: #000000 !important;
     font-size: 1rem !important;
     font-weight: 700 !important;
+    border-radius: 20px !important;
+    text-transform: none !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    padding: 12px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.login-button:hover {
+    background-color: #1ed760 !important;
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4) !important;
 }

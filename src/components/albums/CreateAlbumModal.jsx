@@ -1,8 +1,10 @@
+// src/components/albums/CreateAlbumModal.jsx
 import { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Select, InputLabel, FormControl, Alert } from '@mui/material';
 import { createAlbum } from '../../services/albumService';
 import { getArtists } from '../../services/artistService';
 import ImageUploader from '../common/ImageUploader';
+import './CreateAlbumModal.css';
 
 const CreateAlbumModal = ({ open, onClose, onSuccess }) => {
     const [title, setTitle] = useState('');
@@ -13,7 +15,6 @@ const CreateAlbumModal = ({ open, onClose, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Cargar artistas al abrir el modal para llenar el select relacional
     useEffect(() => {
         if (open) {
             getArtists()
@@ -30,7 +31,7 @@ const CreateAlbumModal = ({ open, onClose, onSuccess }) => {
         try {
             const payload = {
                 title,
-                artist: parseInt(artistId, 10), // Llave foránea esperada por Django
+                artist: parseInt(artistId, 10),
                 release_date: releaseDate || null,
                 cover
             };
@@ -56,10 +57,10 @@ const CreateAlbumModal = ({ open, onClose, onSuccess }) => {
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle fontWeight="bold">Registrar Nuevo Álbum</DialogTitle>
+            <DialogTitle className="create-modal-title">Registrar Nuevo Álbum</DialogTitle>
             <form onSubmit={handleSubmit}>
-                <DialogContent dividers>
-                    {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                <DialogContent dividers className="create-modal-content">
+                    {error && <Alert severity="error" className="create-modal-alert">{error}</Alert>}
 
                     <FormControl fullWidth margin="normal" required>
                         <InputLabel id="artist-select-label">Artista / Banda</InputLabel>
@@ -96,9 +97,9 @@ const CreateAlbumModal = ({ open, onClose, onSuccess }) => {
                     />
                     <ImageUploader label="Portada del Disco (Base64)" value={cover} onChange={setCover} />
                 </DialogContent>
-                <DialogActions sx={{ p: 2 }}>
-                    <Button onClick={handleClose} color="inherit">Cancelar</Button>
-                    <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                <DialogActions className="create-modal-actions">
+                    <Button onClick={handleClose} className="btn-cancel">Cancelar</Button>
+                    <Button type="submit" variant="contained" disabled={loading} className="btn-create">
                         {loading ? "Guardando..." : "Guardar Álbum"}
                     </Button>
                 </DialogActions>

@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper, Alert } from '@mui/material';
@@ -37,7 +38,7 @@ const Login = () => {
         <Box className="login-container">
             <Paper elevation={0} className="login-paper">
                 <Box className="login-header">
-                    <LibraryMusicIcon className="login-icon" sx={{ fontSize: 48 }} />
+                    <LibraryMusicIcon className="login-icon" />
                     <Typography component="h1" variant="h5" className="login-title">
                         Inicia sesión en Vynlo
                     </Typography>
@@ -46,7 +47,7 @@ const Login = () => {
                     </Typography>
                 </Box>
 
-                {error && <Alert severity="error" className="login-alert" sx={{ mb: 2 }}>{error}</Alert>}
+                {error && <Alert severity="error" className="login-alert">{error}</Alert>}
 
                 <form onSubmit={handleLogin}>
                     <TextField
@@ -73,10 +74,8 @@ const Login = () => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
                         disabled={loading}
                         className="login-button"
-                        sx={{ mt: 3, mb: 2, py: 1.5 }}
                     >
                         {loading ? "Autenticando..." : "Entrar al Catálogo"}
                     </Button>
