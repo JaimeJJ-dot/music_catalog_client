@@ -37,6 +37,13 @@
     border-color: #1db954 !important;
 }
 
+/* Ícono del selector de fecha nativo, teñido en verde */
+.create-modal-content input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(56%) sepia(85%) saturate(1275%) hue-rotate(93deg) brightness(95%) contrast(101%);
+    cursor: pointer;
+    opacity: 1;
+}
+
 .create-modal-actions {
     padding: 1rem !important;
     background-color: #181818 !important;

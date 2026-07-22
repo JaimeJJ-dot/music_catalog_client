@@ -1,5 +1,8 @@
 import { Card, CardContent, CardMedia, Typography, Box, Button } from '@mui/material';
-import { DeleteOutlined as DeleteIcon, EditOutlined as EditIcon } from '@mui/icons-material';
+import {
+  DeleteOutlined as DeleteIcon,
+  EditOutlined as EditIcon,
+} from '@mui/icons-material';
 import './AlbumCard.css';
 
 const AlbumCard = ({ album, onDelete, onEdit, canEdit }) => {
@@ -9,22 +12,22 @@ const AlbumCard = ({ album, onDelete, onEdit, canEdit }) => {
   // Función blindada para construir la URL web real hacia el backend de Django
   const getValidImageSource = (cover) => {
     if (!cover) return fallbackCover;
-    
+
     // Si ya es un enlace web completo (http...) o una imagen en Base64 cruda, la usamos directo
     if (cover.startsWith('http://') || cover.startsWith('https://') || cover.startsWith('data:image')) {
       return cover;
     }
-    
+
     const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-    
+
     // Aseguramos que la ruta empiece con una diagonal '/'
     let cleanPath = cover.startsWith('/') ? cover : `/${cover}`;
-    
+
     // Si Django nos devolvió solo el nombre del archivo (ej: "/album_cover_xxx.jpeg"), le anteponemos "/media"
     if (!cleanPath.startsWith('/media/') && !cleanPath.startsWith('/static/')) {
       cleanPath = `/media${cleanPath}`;
     }
-    
+
     return `${baseUrl}${cleanPath}`;
   };
 
@@ -56,9 +59,11 @@ const AlbumCard = ({ album, onDelete, onEdit, canEdit }) => {
           Lanzamiento: <strong>{album.release_date || 'No registrado'}</strong>
         </Typography>
 
+        {/* Botón principal */}
+        
         {/* Agrupación de controles operada por CSS */}
-        <Box className="album-actions">
-          {canEdit && (
+        {canEdit && (
+          <Box className="album-actions">
             <Button
               variant="outlined"
               size="small"
@@ -68,11 +73,8 @@ const AlbumCard = ({ album, onDelete, onEdit, canEdit }) => {
             >
               Editar
             </Button>
-          )}
-          {canEdit && (
             <Button
               variant="outlined"
-              color="error"
               size="small"
               startIcon={<DeleteIcon />}
               onClick={() => onDelete(album.id)}
@@ -80,8 +82,8 @@ const AlbumCard = ({ album, onDelete, onEdit, canEdit }) => {
             >
               Eliminar
             </Button>
-          )}
-        </Box>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

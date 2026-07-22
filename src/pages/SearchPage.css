@@ -1,0 +1,22 @@
+.search-page-container {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  min-height: 100vh;
+  background-color: #121212;
+}
+
+.search-page-title {
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  margin-bottom: 2rem !important;
+}
+
+.search-section {
+  margin-bottom: 2.5rem;
+}
+
+.search-section-title {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  margin-bottom: 1rem !important;
+}
