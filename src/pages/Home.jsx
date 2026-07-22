@@ -15,9 +15,9 @@ import './Home.css';
 
 const getGreeting = () => {
   const hour = new Date().getHours();
-  if (hour < 12) return 'Buenos días';
-  if (hour < 19) return 'Buenas tardes';
-  return 'Buenas noches';
+  if (hour < 12) return 'Buenos Días';
+  if (hour < 19) return 'Buenas Tardes';
+  return 'Buenas Noches';
 };
 
 // Función auxiliar para formatear la URL de las miniaturas de acceso rápido

@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import ArtistsPage from './pages/ArtistsPage';
 import AlbumsPage from './pages/AlbumsPage';
+import SearchPage from './pages/SearchPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/artists" element={<ArtistsPage />} />
         <Route path="/albums" element={<AlbumsPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

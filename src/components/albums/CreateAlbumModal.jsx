@@ -56,18 +56,18 @@ const CreateAlbumModal = ({ open, onClose, onSuccess }) => {
     };
 
     return (
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth className="create-modal-root">
             <DialogTitle className="create-modal-title">Registrar Nuevo Álbum</DialogTitle>
             <form onSubmit={handleSubmit}>
                 <DialogContent dividers className="create-modal-content">
                     {error && <Alert severity="error" className="create-modal-alert">{error}</Alert>}
 
-                    <FormControl fullWidth margin="normal" required>
+                    <FormControl fullWidth margin="normal" required className="modal-field">
                         <InputLabel id="artist-select-label">Artista / Banda</InputLabel>
                         <Select
                             labelId="artist-select-label"
+                            label="Artista / Banda"
                             value={artistId}
-                            label="Artista / Banda *"
                             onChange={(e) => setArtistId(e.target.value)}
                         >
                             {artistsList.map((art) => (
@@ -79,30 +79,46 @@ const CreateAlbumModal = ({ open, onClose, onSuccess }) => {
                     </FormControl>
 
                     <TextField
-                        label="Título del Álbum *"
+                        label="Título del Álbum"
                         fullWidth
                         margin="normal"
                         required
+                        className="modal-field"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
-                    <TextField
-                        label="Fecha de Lanzamiento"
-                        type="date"
-                        fullWidth
-                        margin="normal"
-                        InputLabelProps={{ shrink: true }}
-                        value={releaseDate}
-                        onChange={(e) => setReleaseDate(e.target.value)}
-                    />
+                    <div className="modal-static-field">
+                        <label className="modal-static-label" htmlFor="release-date-input">
+                            Fecha de Lanzamiento
+                        </label>
+                        <TextField
+                            id="release-date-input"
+                            type="date"
+                            fullWidth
+                            className="modal-field modal-field--no-label"
+                            value={releaseDate}
+                            onChange={(e) => setReleaseDate(e.target.value)}
+                        />
+                    </div>
                     <ImageUploader label="Portada del Disco (Base64)" value={cover} onChange={setCover} />
                 </DialogContent>
-                <DialogActions className="create-modal-actions">
-                    <Button onClick={handleClose} className="btn-cancel">Cancelar</Button>
-                    <Button type="submit" variant="contained" disabled={loading} className="btn-create">
+                <DialogActions 
+                    className="create-modal-actions"
+                    sx={{ justifyContent: "center" }}
+                    >
+                    <Button onClick={handleClose} className="btn-cancel">
+                        Cancelar
+                    </Button>
+                    <Button 
+                        type="submit" 
+                        variant="contained" 
+                        disabled={loading} 
+                        className="btn-create"
+                    >
                         {loading ? "Guardando..." : "Guardar Álbum"}
                     </Button>
                 </DialogActions>
+
             </form>
         </Dialog>
     );

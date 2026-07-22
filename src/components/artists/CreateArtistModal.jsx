@@ -78,12 +78,23 @@ const CreateArtistModal = ({ open, onClose, onSuccess }) => {
                     />
                     <ImageUploader label="Foto del Artista (Base64)" value={photo} onChange={setPhoto} />
                 </DialogContent>
-                <DialogActions className="create-artist-actions">
-                    <Button onClick={handleClose} className="btn-cancel">Cancelar</Button>
-                    <Button type="submit" variant="contained" disabled={loading} className="btn-create">
+                <DialogActions 
+                    className="create-artist-actions"
+                    sx={{ justifyContent: "center" }}
+                    >
+                    <Button onClick={handleClose} className="btn-cancel">
+                        Cancelar
+                    </Button>
+                    <Button 
+                        type="submit" 
+                        variant="contained" 
+                        disabled={loading} 
+                        className="btn-create"
+                    >
                         {loading ? "Guardando..." : "Guardar Artista"}
                     </Button>
                 </DialogActions>
+
             </form>
         </Dialog>
     );
