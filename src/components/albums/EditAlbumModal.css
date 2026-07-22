@@ -62,3 +62,11 @@
 .btn-save:hover {
     background-color: #1ed760 !important;
 }
+
+/* Ícono del selector de fecha nativo, teñido en verde (aplica a create y edit) */
+.create-modal-content input[type='date']::-webkit-calendar-picker-indicator,
+.edit-modal-content input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(56%) sepia(85%) saturate(1275%) hue-rotate(93deg) brightness(95%) contrast(101%);
+    cursor: pointer;
+    opacity: 1;
+}
