@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Typography, Box, Button, Grid } from '@mui/material';
+import { Container, Typography, Box, Button } from '@mui/material';
 import { PersonOutlineOutlined as PersonOutlineIcon } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { getArtists, deleteArtist } from '../services/artistService';
@@ -12,6 +12,7 @@ import ErrorState from '../components/common/ErrorState';
 import EmptyState from '../components/common/EmptyState';
 import EditArtistModal from '../components/artists/EditArtistModal';
 import EditAlbumModal from '../components/albums/EditAlbumModal';
+import Carousel from '../components/common/Carousel';
 import './Home.css';
 
 const getGreeting = () => {
@@ -214,24 +215,22 @@ const Home = () => {
           </Button>
         </Box>
 
-        {/* Acceso rápido: grilla mixta de artistas + álbumes */}
+        {/* Acceso rápido: exactamente 2 filas de 3 columnas (6 en total) */}
         {filter === 'todo' && !isEmpty && quickAccessItems.length > 0 && (
           <Box className="home-section">
-            <Grid container spacing={1.5}>
+            <Box className="quick-access-grid">
               {quickAccessItems.map((item) => (
-                <Grid item xs={12} sm={6} md={4} key={item.id}>
-                  <Link to={item.to} className="quick-access-card">
-                    <Box
-                      className="quick-access-image"
-                      style={{
-                        backgroundImage: `url(${getValidImageUrl(item.image)})`,
-                      }}
-                    />
-                    <Typography className="quick-access-name">{item.name}</Typography>
-                  </Link>
-                </Grid>
+                <Link to={item.to} className="quick-access-card" key={item.id}>
+                  <Box
+                    className="quick-access-image"
+                    style={{
+                      backgroundImage: `url(${getValidImageUrl(item.image)})`,
+                    }}
+                  />
+                  <Typography className="quick-access-name">{item.name}</Typography>
+                </Link>
               ))}
-            </Grid>
+            </Box>
           </Box>
         )}
 
@@ -256,18 +255,17 @@ const Home = () => {
                 onAction={canEdit ? () => navigate('/artists') : undefined}
               />
             ) : (
-              <Box className="home-scroll-row">
-                {artists.slice(0, 6).map((artist) => (
-                  <Box className="home-scroll-item" key={artist.id}>
-                    <ArtistCard
-                      artist={artist}
-                      canEdit={canEdit}
-                      onEdit={handleEditArtistClick}
-                      onDelete={handleDeleteArtistClick}
-                    />
-                  </Box>
+              <Carousel>
+                {artists.slice(0, 7).map((artist) => (
+                  <ArtistCard
+                    key={artist.id}
+                    artist={artist}
+                    canEdit={canEdit}
+                    onEdit={handleEditArtistClick}
+                    onDelete={handleDeleteArtistClick}
+                  />
                 ))}
-              </Box>
+              </Carousel>
             )}
           </Box>
         )}
@@ -293,18 +291,17 @@ const Home = () => {
                 onAction={canEdit ? () => navigate('/albums') : undefined}
               />
             ) : (
-              <Box className="home-scroll-row">
-                {albums.slice(0, 6).map((album) => (
-                  <Box className="home-scroll-item" key={album.id}>
-                    <AlbumCard
-                      album={album}
-                      canEdit={canEdit}
-                      onEdit={handleEditAlbumClick}
-                      onDelete={handleDeleteAlbumClick}
-                    />
-                  </Box>
+              <Carousel>
+                {albums.slice(0, 7).map((album) => (
+                  <AlbumCard
+                    key={album.id}
+                    album={album}
+                    canEdit={canEdit}
+                    onEdit={handleEditAlbumClick}
+                    onDelete={handleDeleteAlbumClick}
+                  />
                 ))}
-              </Box>
+              </Carousel>
             )}
           </Box>
         )}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Grid, Typography, Box, Button } from '@mui/material';
+import { Container, Typography, Box, Button } from '@mui/material';
 import { AddOutlined as AddOutlineIcon, FilterAltOffOutlined as FilterOffIcon } from '@mui/icons-material';
 import { getAlbums, deleteAlbum } from '../services/albumService';
 import { isLoggedIn } from '../services/authService';
@@ -145,13 +145,18 @@ const AlbumsPage = () => {
             : "No hay álbumes registrados en el sistema. ¡Añade el primer disco con el botón superior!"
         } />
       ) : (
-        <Grid container spacing={3}>
+        /* Reemplazado MUI Grid por el contenedor CSS Grid uniforme */
+        <Box className="albums-grid">
           {displayedAlbums.map((album) => (
-            <Grid item xs={12} sm={6} md={3} lg={2.4} key={album.id}>
-              <AlbumCard album={album} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
-            </Grid>
+            <AlbumCard 
+              key={album.id}
+              album={album} 
+              onDelete={handleDelete} 
+              onEdit={handleEditClick} 
+              canEdit={canEdit} 
+            />
           ))}
-        </Grid>
+        </Box>
       )}
 
       {canEdit && (
