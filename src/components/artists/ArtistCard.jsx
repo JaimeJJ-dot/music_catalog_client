@@ -59,7 +59,7 @@ const ArtistCard = ({ artist, onDelete, onEdit, canEdit }) => {
             variant="contained"
             size="small"
             startIcon={<AlbumIcon />}
-            onClick={() => navigate(`/albums?artistId=${artist.id}`)}
+            onClick={() => navigate(`/artists/${artist.id}`)}
             className="btn-discography"
           >
             Ver discografía

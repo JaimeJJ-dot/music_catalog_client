@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import ArtistsPage from './pages/ArtistsPage';
+import ArtistDetailPage from './pages/ArtistDetailPage';
 import AlbumsPage from './pages/AlbumsPage';
 import SearchPage from './pages/SearchPage';
 
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/artists" element={<ArtistsPage />} />
+        <Route path="/artists/:id" element={<ArtistDetailPage />} />
         <Route path="/albums" element={<AlbumsPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/search" element={<SearchPage />} />
