@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Typography, Box, Button, Grid } from '@mui/material';
+import { PersonOutlineOutlined as PersonOutlineIcon } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { getArtists, deleteArtist } from '../services/artistService';
 import { getAlbums, deleteAlbum } from '../services/albumService';
@@ -158,8 +159,8 @@ const Home = () => {
 
   // Mezcla de artistas + álbumes para el "acceso rápido", máximo 6 tarjetas
   const quickAccessItems = [
-    ...artists.slice(0, 3).map((a) => ({ type: 'artist', id: `artist-${a.id}`, name: a.name, image: a.photo, to: '/artists' })),
-    ...albums.slice(0, 3).map((a) => ({ type: 'album', id: `album-${a.id}`, name: a.title, image: a.cover, to: '/albums' })),
+  ...artists.slice(0, 3).map((a) => ({ type: 'artist', id: `artist-${a.id}`, name: a.name, image: a.photo, to: `/artists/${a.id}` })),
+  ...albums.slice(0, 3).map((a) => ({ type: 'album', id: `album-${a.id}`, name: a.title, image: a.cover, to: '/albums' })),
   ];
 
   const isEmpty = artists.length === 0 && albums.length === 0;
@@ -174,7 +175,7 @@ const Home = () => {
         <Container maxWidth="lg">
           <Box className="home-greeting-row">
             <Box className="home-avatar">
-              {canEdit && username ? username[0].toUpperCase() : '?'}
+              {canEdit && username ? username[0].toUpperCase() : <PersonOutlineIcon sx={{ fontSize: 32 }} />}
             </Box>
             <Box>
               <Typography variant="h4" className="home-greeting">

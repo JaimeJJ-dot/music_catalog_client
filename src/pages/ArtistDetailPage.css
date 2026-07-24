@@ -1,0 +1,115 @@
+.artist-detail-page {
+  background-color: #121212;
+  min-height: 100vh;
+}
+
+.artist-detail-hero {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.artist-detail-hero-overlay {
+  background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(18,18,18,0.85) 70%, #121212 100%);
+  padding: 1.5rem 0 2.5rem 0;
+}
+
+.artist-detail-back-btn {
+  color: #FFFFFF !important;
+  margin-bottom: 1.5rem !important;
+  font-weight: 700 !important;
+}
+
+.artist-detail-info {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.artist-detail-photo {
+  width: 176px;
+  height: 176px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.artist-detail-label {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+}
+
+.artist-detail-name {
+  color: #FFFFFF !important;
+  font-weight: 900 !important;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin: 0.25rem 0 !important;
+}
+
+.artist-detail-genre {
+  color: #E0E0E0 !important;
+}
+
+.artist-detail-content {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.artist-detail-bio-section {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #1DB954;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  max-width: none;
+}
+
+.artist-detail-bio-title {
+  color: #1DB954 !important;
+  font-weight: 800 !important;
+  margin-bottom: 0.75rem !important;
+  text-transform: uppercase;
+  font-size: 0.9rem !important;
+  letter-spacing: 1px;
+}
+
+.artist-detail-bio {
+  color: #D0D0D0 !important;
+  line-height: 1.8;
+  font-size: 1rem !important;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.artist-detail-albums-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.artist-detail-section-title {
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width: 600px) {
+  .artist-detail-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .artist-detail-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .artist-detail-name {
+    font-size: 2rem !important;
+  }
+}
