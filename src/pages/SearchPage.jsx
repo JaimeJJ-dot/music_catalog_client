@@ -1,7 +1,7 @@
 // src/pages/SearchPage.jsx
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Container, Typography, Box, Grid } from '@mui/material';
+import { Container, Typography, Box } from '@mui/material';
 import { getArtists } from '../services/artistService';
 import { getAlbums } from '../services/albumService';
 import ArtistCard from '../components/artists/ArtistCard';
@@ -20,7 +20,42 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchData = async () => {
+  // Carga inicial al montar la página
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchInitialData = async () => {
+      try {
+        const [artistsRes, albumsRes] = await Promise.all([
+          getArtists(),
+          getAlbums(),
+        ]);
+        if (isMounted) {
+          setAllArtists(artistsRes.data);
+          setAllAlbums(albumsRes.data);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error al buscar:", err);
+        if (isMounted) {
+          setError("No pudimos completar la búsqueda. Verifica tu conexión.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchInitialData();
+
+    return () => {
+      isMounted = false; // Limpieza si el usuario navega rápido a otra vista
+    };
+  }, []);
+
+  // Función exclusiva para la acción de reintentar en pantalla de error
+  const handleRetry = async () => {
     setLoading(true);
     setError(null);
     try {
@@ -31,24 +66,19 @@ const SearchPage = () => {
       setAllArtists(artistsRes.data);
       setAllAlbums(albumsRes.data);
     } catch (err) {
-      console.error("Error al buscar:", err);
+      console.error("Error al reintentar búsqueda:", err);
       setError("No pudimos completar la búsqueda. Verifica tu conexión.");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchData();
-  }, []);
-
   if (loading) {
     return <LoadingSpinner message="Buscando en tu catálogo..." />;
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={fetchData} />;
+    return <ErrorState message={error} onRetry={handleRetry} />;
   }
 
   const normalizedQuery = query.toLowerCase().trim();
@@ -87,13 +117,11 @@ const SearchPage = () => {
               <Typography variant="h5" className="search-section-title">
                 Artistas
               </Typography>
-              <Grid container spacing={3}>
+              <Box className="search-grid">
                 {matchedArtists.map((artist) => (
-                  <Grid item xs={12} sm={6} md={4} key={artist.id}>
-                    <ArtistCard artist={artist} />
-                  </Grid>
+                  <ArtistCard key={artist.id} artist={artist} />
                 ))}
-              </Grid>
+              </Box>
             </Box>
           )}
 
@@ -102,13 +130,11 @@ const SearchPage = () => {
               <Typography variant="h5" className="search-section-title">
                 Álbumes
               </Typography>
-              <Grid container spacing={3}>
+              <Box className="search-grid">
                 {matchedAlbums.map((album) => (
-                  <Grid item xs={12} sm={6} md={4} key={album.id}>
-                    <AlbumCard album={album} />
-                  </Grid>
+                  <AlbumCard key={album.id} album={album} />
                 ))}
-              </Grid>
+              </Box>
             </Box>
           )}
         </>

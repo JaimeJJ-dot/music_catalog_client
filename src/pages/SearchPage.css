@@ -6,7 +6,7 @@
 }
 
 .search-page-title {
-  color: #FFFFFF !important;
+  color: #ffffff !important;
   font-weight: 800 !important;
   margin-bottom: 2rem !important;
 }
@@ -16,7 +16,14 @@
 }
 
 .search-section-title {
-  color: #FFFFFF !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   margin-bottom: 1rem !important;
+}
+
+/* Grilla responsive idéntica a las secciones del catálogo */
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
 }
