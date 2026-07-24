@@ -1,51 +1,62 @@
-# Music Catalog Client
+# 🎵 Vynlo - Music Catalog Client
 
-Cliente web Full-Stack desarrollado con **React 18**, **Vite** y **Material UI (MUI v5)** para el consumo de la API REST de catálogo musical. Implementa un flujo de seguridad y navegación protegido por **OAuth 2.0**, gestión reactiva de estados visuales y procesamiento local de archivos en formato Base64.
+Cliente web Full-Stack desarrollado con **React 18**, **Vite** y **Material UI (MUI v5)** para el consumo de la API REST de catálogo musical. Implementa autenticación **OAuth 2.0**, control de acceso por roles (lectura pública / escritura autenticada), navegación protegida, gestión reactiva de estados visuales y una interfaz propia inspirada en productos de streaming reales.
 
 Este frontend está diseñado específicamente para interactuar con el backend relacional del proyecto: [`music_catalog_api`](https://github.com/Nico180306/music_catalog_api).
 
 ---
 
-## 🛠️ Tecnologías y Librerías
+## ✨ Vista general
 
-- React 18 + Vite
-- Material UI (MUI v5) & Emotion
-- React Router Dom v6 (Enrutamiento y Rutas Protegidas)
-- Axios (Cliente HTTP y gestión de interceptores)
-- API nativa FileReader (Transformación de imágenes a Base64)
+| | |
+|---|---|
+| **Nombre del producto** | Vynlo |
+| **Tipo** | SPA (Single Page Application) |
+| **Backend consumido** | Django REST Framework + OAuth 2.0 (Django OAuth Toolkit) |
+| **Acceso** | Lectura pública para cualquier visitante · Creación/edición/eliminación solo para usuarios autenticados |
+
+---
+
+## 🛠️ Tecnologías y librerías
+
+- **React 18 + Vite** - SPA con recarga en caliente
+- **Material UI (MUI v5)** & Emotion - sistema de componentes, tematizado con paleta propia (`theme.js`)
+- **React Router DOM v6** - enrutamiento, rutas dinámicas (`/artists/:id`) y parámetros de búsqueda (`useSearchParams`)
+- **Axios** - cliente HTTP con interceptor de token Bearer
+- **API nativa FileReader** - conversión de imágenes locales a Base64
+- **Google Fonts (Inter)** - tipografía del tema visual
 
 ---
 
 ## 📋 Requisitos previos
 
-- Node.js 18 o superior instalado ([nodejs.org](https://nodejs.org/))
+- Node.js 18 o superior ([nodejs.org](https://nodejs.org/))
 - Git
-- El servidor backend (`music_catalog_api`) corriendo en local en el puerto `8000` y con las cabeceras CORS habilitadas.
+- El servidor backend (`music_catalog_api`) corriendo en local en el puerto `8000`, con CORS habilitado para `http://localhost:5173`
 
 ---
 
-## 🚀 Instalación y Despliegue Local (desde cero)
+## 🚀 Instalación y despliegue local
 
-### 1. Clonar el repositorio y entrar al directorio
+### 1. Clonar el repositorio
 
 ```bash
-git clone [https://github.com/TU_USUARIO/music_catalog_client.git](https://github.com/TU_USUARIO/music_catalog_client.git)
+git clone https://github.com/TU_USUARIO/music_catalog_client.git
 cd music_catalog_client
+```
 
-### 2. Instalar dependencias del proyecto
-No es necesario manipular carpetas ni instalar paquetes individualmente. El manifiesto del sistema reconstruirá todo el árbol de dependencias ejecutando:
+### 2. Instalar dependencias
 
 ```bash
 npm install
 ```
 
----
+### 3. Configurar variables de entorno
 
-### 3. Configurar variables de entorno (OAuth 2.0 y API)
-Por seguridad y buenas prácticas (metodología Twelve-Factor App), las credenciales de cliente no están programadas en el código fuente.
+Por seguridad (metodología Twelve-Factor App), las credenciales no están escritas en el código fuente.
 
-1. En la raíz del proyecto, crea un archivo llamado exactamente `.env` tomando como referencia el archivo `.env.example`.
-2. Completa las variables con las credenciales emitidas por tu panel de administración en Django (http://127.0.0.1:8000/admin/ -> Django OAuth Toolkit):
+1. En la raíz del proyecto, crea un archivo `.env` tomando como referencia `.env.example`.
+2. Completa las variables con las credenciales generadas en el panel de administración de Django (`http://127.0.0.1:8000/admin/` → Django OAuth Toolkit):
 
 ```env
 VITE_API_BASE_URL=http://127.0.0.1:8000
@@ -53,66 +64,93 @@ VITE_CLIENT_ID=tu_client_id_generado_en_django
 VITE_CLIENT_SECRET=tu_client_secret_generado_en_django
 ```
 
----
-
-### 4. Levantar el servidor de desarrollo en caliente
+### 4. Levantar el servidor de desarrollo
 
 ```bash
 npm run dev
 ```
 
-La aplicación se abrirá en tu navegador en la ruta http://localhost:5173/. Si intentas acceder directamente al catálogo sin haber iniciado sesión, el sistema te redirigirá automáticamente a la pantalla de /login.
+La aplicación se abre en `http://localhost:5173/`, directamente en el **Home** - no requiere inicio de sesión para explorar el catálogo. Para crear, editar o eliminar registros, inicia sesión desde el botón **"Iniciar sesión"** del navbar.
 
 ---
 
-## 🏗️ Aspectos Destacados de la Arquitectura
+## 🏗️ Aspectos destacados de la arquitectura
 
-### 🛡️ Seguridad OAuth 2.0 y Rutas Protegidas
-- **Intercepción de peticiones (services/api.js):** Axios está configurado con un interceptor que inyecta dinámicamente la cabecera `Authorization: Bearer <access_token>` en cada llamada HTTP si el usuario está autenticado.
-- **Rutas Privadas (App.jsx):** Un componente envoltorio (`<ProtectedRoute>`) monitorea la persistencia de la sesión en el `localStorage`. Sin un token válido, se cortocircuita el renderizado visual y se bloquea el acceso a las vistas de entidades.
+### 🛡️ Seguridad OAuth 2.0 y control de acceso por roles
 
-### 🎨 Gestión Estricta de Estados de UI (Feedback Loops)
-Cumpliendo con los estándares de diseño de interfaces web modernas, todas las vistas conectadas a endpoints asíncronos (ArtistsPage y AlbumsPage) gestionan explícitamente los 3 estados del ciclo de vida del dato:
-1. **Cargando:** Renderizado de `<LoadingSpinner/>` durante el tiempo de espera de respuesta del servidor.
-2. **Error:** Renderizado de `<ErrorState/>` con alertas comprensibles y acción de reintento (`retry`) si la red o el token fallan.
-3. **Vacío:** Renderizado de `<EmptyState/>` si la consulta HTTP 200 devuelve un arreglo vacío `[]`, guiando al usuario a crear el primer registro.
+- **Interceptor de peticiones (`services/api.js`)** - Axios inyecta dinámicamente `Authorization: Bearer <access_token>` en cada llamada si el usuario está autenticado.
+- **Acceso de lectura público** - el backend expone los endpoints de consulta (`GET`) sin requerir autenticación (`IsAuthenticatedOrReadOnly`), así que Home, Artistas, Álbumes y el buscador son accesibles para cualquier visitante.
+- **Escritura protegida** - los botones de crear, editar y eliminar solo se renderizan cuando `isLoggedIn()` detecta un `access_token` válido en `localStorage`; el backend refuerza el mismo control a nivel de API, por lo que no depende únicamente del frontend.
+- **Sesión persistente** - el nombre de usuario se guarda junto al token para personalizar el saludo del Home, y ambos se limpian juntos al cerrar sesión.
 
-### 🖼️ Procesamiento de Imágenes en Base64
-Para mantener un contrato de comunicación 100% JSON con el API REST sin requerir transferencias multipartes (`multipart/form-data`), el componente `<ImageUploader/>` utiliza la API asíncrona del navegador `FileReader`. Convierte en tiempo real los archivos binarios locales seleccionados por el usuario a cadenas ASCII codificadas en **Base64** antes de despachar el payload al servidor.
+### 🎨 Gestión estricta de estados de UI (feedback loops)
+
+Todas las vistas conectadas a endpoints asíncronos (`Home`, `ArtistsPage`, `AlbumsPage`, `ArtistDetailPage`, `SearchPage`) gestionan explícitamente los 3 estados del ciclo de vida del dato:
+
+1. **Cargando** - `<LoadingSpinner />` mientras se espera la respuesta del servidor.
+2. **Error** - `<ErrorState />` con mensaje y acción de reintento (`retry`) si la red o el token fallan.
+3. **Vacío** - `<EmptyState />` si la consulta devuelve un arreglo vacío, con una acción directa de "Agregar" cuando el usuario tiene permisos de edición.
+
+### 🏠 Home dinámico
+
+- Saludo personalizado según la hora del día y el usuario autenticado, con avatar (inicial o ícono genérico si no hay sesión).
+- Contador en vivo de artistas y álbumes registrados.
+- Grilla de acceso rápido mezclando los artistas y álbumes más recientes.
+- Carruseles horizontales (`<Carousel />`) con flechas de navegación, tamaño de tarjeta fijo y hasta 7 elementos por sección.
+- Chips de filtro (Todo / Artistas / Álbumes) que ocultan o muestran secciones sin recargar la página.
+
+### 🔍 Búsqueda global
+
+`SearchPage` consulta artistas y álbumes y filtra en el cliente por nombre de artista, título de álbum o artista asociado, mostrando resultados agrupados por tipo.
+
+### 🎤 Página de detalle de artista
+
+`ArtistDetailPage` (`/artists/:id`) muestra un hero con foto de portada (banner) y foto de perfil, biografía destacada y la discografía completa del artista, reutilizando `AlbumCard` con los mismos controles de edición condicionados por sesión.
+
+### 🖼️ Procesamiento de imágenes en Base64
+
+Para mantener un contrato de comunicación 100% JSON con el API REST sin requerir `multipart/form-data`, el componente `<ImageUploader />` usa la API `FileReader` del navegador para convertir archivos locales a Base64 antes de enviarlos al servidor.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del proyecto
 
 ```text
 music_catalog_client/
 ├── public/
+│   └── favicon.svg           # Ícono de la app (disco de vinilo)
 ├── src/
 │   ├── components/
-│   │   ├── albums/          # Tarjetas y formularios modales de Álbumes
-│   │   ├── artists/         # Tarjetas y formularios modales de Artistas
-│   │   ├── common/          # Componentes UI transversales (Loading, Error, Empty, Uploader)
-│   │   └── layout/          # Barra de navegación principal (Navbar)
+│   │   ├── albums/            # AlbumCard, CreateAlbumModal, EditAlbumModal
+│   │   ├── artists/            # ArtistCard, CreateArtistModal, EditArtistModal
+│   │   ├── common/            # LoadingSpinner, ErrorState, EmptyState, ImageUploader, Logo, Carousel
+│   │   └── layout/             # Navbar (logo, buscador, navegación, sesión)
 │   ├── pages/
-│   │   ├── AlbumsPage.jsx   # Vista principal y CRUD de Álbumes
-│   │   ├── ArtistsPage.jsx  # Vista principal y CRUD de Artistas
-│   │   ├── Login.jsx        # Pantalla y formulario de autenticación OAuth 2.0
-│   │   └── *.css            # Estilos externos independientes por página
+│   │   ├── Home.jsx            # Vista de inicio con carruseles y acceso rápido
+│   │   ├── ArtistsPage.jsx     # Catálogo y CRUD de Artistas
+│   │   ├── ArtistDetailPage.jsx# Detalle de artista + su discografía
+│   │   ├── AlbumsPage.jsx      # Catálogo y CRUD de Álbumes
+│   │   ├── SearchPage.jsx      # Resultados de búsqueda global
+│   │   ├── Login.jsx           # Autenticación OAuth 2.0
+│   │   └── *.css               # Estilos independientes por página
 │   ├── services/
-│   │   ├── api.js           # Instancia central de Axios e interceptor Bearer
-│   │   ├── authService.js   # Peticiones POST al endpoint de tokens OAuth2
-│   │   ├── artistService.js # Métodos CRUD para la entidad Artista
-│   │   └── albumService.js  # Métodos CRUD para la entidad Álbum
-│   ├── App.jsx              # Enrutador principal y reglas de protección de rutas
-│   └── main.jsx             # Punto de entrada y montaje del DOM virtual
-├── .env.example             # Plantilla pública de variables de entorno
-├── package.json             # Manifiesto y dependencias de Node
+│   │   ├── api.js              # Instancia de Axios e interceptor Bearer
+│   │   ├── authService.js      # Peticiones al endpoint de tokens OAuth2
+│   │   ├── artistService.js    # CRUD de Artistas
+│   │   └── albumService.js     # CRUD de Álbumes
+│   ├── utils/
+│   │   └── auth.js             # isLoggedIn() — lógica local de sesión
+│   ├── theme.js                # Tema MUI (paleta, tipografía, componentes)
+│   ├── App.jsx                 # Enrutador principal
+│   └── main.jsx                # Punto de entrada y ThemeProvider
+├── .env.example                # Plantilla pública de variables de entorno
+├── package.json
 └── README.md
 ```
 
 ---
 
-## 👥 Equipo y Distribución de Trabajo
+## 👥 Equipo y distribución de trabajo
 
-- **Nicolás Santillán** — Configuración de entorno de Vite, variables de seguridad, vista de Login y enlace OAuth 2.0, enrutamiento principal con protección de rutas (App.jsx), y formularios modales de creación con motor de conversión de imágenes a Base64 (ImageUploader).
-- **Jaime Jiménez** — Desarrollo de componentes de estado visual transversales (LoadingSpinner, ErrorState, EmptyState, Navbar), capa de servicios HTTP con Axios (services/), diseño de tarjetas visuales (ArtistCard, AlbumCard) y construcción de las vistas principales del catálogo con máquinas de estado (ArtistsPage, AlbumsPage).
+- **Nicolás Santillán** - Configuración de entorno de Vite, variables de seguridad, vista de Login y enlace OAuth 2.0, enrutamiento principal (`App.jsx`), y formularios modales de creación con motor de conversión de imágenes a Base64 (`ImageUploader`).
+- **Jaime Jiménez** - Componentes de estado visual transversales (`LoadingSpinner`, `ErrorState`, `EmptyState`, `Navbar`), capa de servicios HTTP con Axios (`services/`), diseño de tarjetas visuales (`ArtistCard`, `AlbumCard`), vistas principales del catálogo (`ArtistsPage`, `AlbumsPage`), tema visual Vynlo, Home, página de detalle de artista, buscador global y control de acceso por roles en el frontend.
