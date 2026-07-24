@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Grid, Typography, Box, Button } from '@mui/material';
+import { Container, Typography, Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { getArtists, deleteArtist } from '../services/artistService';
 import { isLoggedIn } from '../services/authService';
@@ -20,12 +20,10 @@ const ArtistsPage = () => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const canEdit = isLoggedIn();
 
-  // Función para insertar el nuevo artista en el estado de React al guardarlo:
   const handleArtistCreated = (newArtist) => {
     setArtists((prev) => [newArtist, ...prev]);
   };
 
-  // Funciones de manejo de edición:
   const handleEditClick = (artist) => {
     setEditingArtist(artist);
     setOpenEditModal(true);
@@ -35,7 +33,6 @@ const ArtistsPage = () => {
     setArtists((prev) => prev.map((art) => (art.id === updatedArtist.id ? updatedArtist : art)));
   };
 
-  // Aislamos la consulta asíncrona dentro del efecto para cumplir las reglas de React Hooks
   useEffect(() => {
     let isMounted = true;
 
@@ -61,11 +58,10 @@ const ArtistsPage = () => {
     fetchArtists();
 
     return () => {
-      isMounted = false; // Cleanup de seguridad
+      isMounted = false;
     };
   }, []);
 
-  // Función de reintento estandarizada a async/await
   const handleRetry = async () => {
     setLoading(true);
     setError(null);
@@ -121,17 +117,21 @@ const ArtistsPage = () => {
       {artists.length === 0 ? (
         <EmptyState message="No hay artistas registrados aún. ¡Añade el primero con el botón superior!" />
       ) : (
-        <Grid container spacing={3}>
+        /* Reemplazamos MUI Grid por el contenedor CSS Grid */
+        <Box className="artists-grid">
           {artists.map((artist) => (
-            /* Homologado a md={3} lg={2.4} para mantener simetría exacta con los álbumes */
-            <Grid item xs={12} sm={6} md={3} lg={2.4} key={artist.id}>
-              <ArtistCard artist={artist} onDelete={handleDelete} onEdit={handleEditClick} canEdit={canEdit} />
-            </Grid>
+            <ArtistCard 
+              key={artist.id} 
+              artist={artist} 
+              onDelete={handleDelete} 
+              onEdit={handleEditClick} 
+              canEdit={canEdit} 
+            />
           ))}
-        </Grid>
+        </Box>
       )}
 
-      {/* Componentes Modales de creación y edición */}
+      {/* Modales */}
       {canEdit && (
         <>
           <CreateArtistModal

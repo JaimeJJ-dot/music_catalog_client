@@ -85,3 +85,11 @@
     align-self: stretch;
   }
 }
+
+/* GRID RESPONSIVO CON ALTURAS SIMÉTRICAS */
+.albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 24px;
+  align-items: stretch; /* Estira las tarjetas para que midan lo mismo en la misma fila */
+}

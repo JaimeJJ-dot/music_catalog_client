@@ -1,0 +1,55 @@
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0.25rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-track > * {
+  flex: 0 0 200px;
+  width: 200px;
+}
+
+.carousel-arrow {
+  background-color: #181818 !important;
+  color: #FFFFFF !important;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.carousel-arrow:hover {
+  background-color: #2a2a2a !important;
+  transform: scale(1.08);
+}
+
+.carousel-arrow-left {
+  margin-right: -20px;
+}
+
+.carousel-arrow-right {
+  margin-left: -20px;
+}
+
+@media (max-width: 600px) {
+  .carousel-track > * {
+    flex: 0 0 160px;
+    width: 160px;
+  }
+}

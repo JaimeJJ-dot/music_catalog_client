@@ -22,7 +22,6 @@
   letter-spacing: -0.5px;
 }
 
-/* Personalización del botón de acción en el header */
 .artists-page-header .MuiButton-containedPrimary {
   background-color: #1db954;
   color: #000000;
@@ -40,7 +39,6 @@
   box-shadow: 0 6px 16px rgba(29, 185, 84, 0.5);
 }
 
-/* Adaptabilidad para pantallas móviles */
 @media (max-width: 600px) {
   .artists-page-header {
     flex-direction: column;
@@ -51,4 +49,12 @@
   .artists-page-header .MuiButton-root {
     align-self: stretch;
   }
+}
+
+/* GRID RESPONSIVO CON ALTURAS HOMOGÉNEAS */
+.artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 24px;
+  align-items: stretch; /* Obliga a todas las tarjetas de una fila a medir lo mismo de alto */
 }

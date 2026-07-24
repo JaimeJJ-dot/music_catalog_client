@@ -198,3 +198,57 @@
   background-color: #FFFFFF !important;
   color: #000000 !important;
 }
+/* Grilla de Acceso Rápido (Estilo Spotify 2x3) */
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Fueraza exactamente 3 columnas principales */
+  gap: 16px;
+  margin-bottom: 2rem;
+}
+
+/* Tarjeta individual */
+.quick-access-card {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  text-decoration: none;
+  height: 80px; /* Altura idéntica a Spotify */
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.quick-access-card:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.quick-access-image {
+  width: 80px;
+  height: 80px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.quick-access-name {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  padding: 0 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Responsivo para tablets y celulares */
+@media (max-width: 900px) {
+  .quick-access-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+  }
+}
+
+@media (max-width: 550px) {
+  .quick-access-grid {
+    grid-template-columns: 1fr; /* 1 columna en móviles */
+  }
+}
