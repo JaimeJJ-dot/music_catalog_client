@@ -114,5 +114,5 @@ music_catalog_client/
 
 ## 👥 Equipo y Distribución de Trabajo
 
-- **Nicolás Santillán (Estudiante A)** — Configuración de entorno de Vite, variables de seguridad, vista de Login y enlace OAuth 2.0, enrutamiento principal con protección de rutas (App.jsx), y formularios modales de creación con motor de conversión de imágenes a Base64 (ImageUploader).
-- **Jaime Jiménez (Estudiante B)** — Desarrollo de componentes de estado visual transversales (LoadingSpinner, ErrorState, EmptyState, Navbar), capa de servicios HTTP con Axios (services/), diseño de tarjetas visuales (ArtistCard, AlbumCard) y construcción de las vistas principales del catálogo con máquinas de estado (ArtistsPage, AlbumsPage).
+- **Nicolás Santillán** — Configuración de entorno de Vite, variables de seguridad, vista de Login y enlace OAuth 2.0, enrutamiento principal con protección de rutas (App.jsx), y formularios modales de creación con motor de conversión de imágenes a Base64 (ImageUploader).
+- **Jaime Jiménez** — Desarrollo de componentes de estado visual transversales (LoadingSpinner, ErrorState, EmptyState, Navbar), capa de servicios HTTP con Axios (services/), diseño de tarjetas visuales (ArtistCard, AlbumCard) y construcción de las vistas principales del catálogo con máquinas de estado (ArtistsPage, AlbumsPage).
